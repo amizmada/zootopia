@@ -70,6 +70,14 @@
     }
     
     .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
+
+    /* DEN V TÝDNU */
+    h1 { 
+      margin: 0; font-size: 1.1rem; font-weight: 700; 
+      text-transform: uppercase; letter-spacing: 2px; 
+      color: var(--text-sec); /* Jemnější barva pro den */
+      margin-bottom: 4px;
+    }
     
     .date-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
     
@@ -234,6 +242,9 @@
 
   <header>
     <div class="header-left">
+      <!-- DEN V TÝDNU PŘIDÁN ZDE -->
+      <h1 id="day-display">...</h1>
+
       <div class="date-row">
         <div>
             <div id="date-display" class="date-large">...</div>
@@ -442,7 +453,7 @@
             var targetTs = parseInt(row.getAttribute('data-ts'));
             var diffSec = Math.floor((targetTs - now) / 1000);
             var valEl = row.querySelector('.val');
-            var unitEl = row.querySelector('.unit');
+            var unitEl = row.querySelector('.unit'); // Přidána proměnná unitEl
             
             valEl.style.color = "#fff";
             
@@ -462,8 +473,7 @@
                     }
                 }
                 valEl.innerText = text;
-                // FIX: Ochrana proti null reference (přidána podmínka)
-                if(unitEl) unitEl.innerText = unit; 
+                if(unitEl) unitEl.innerText = unit; // Aktualizace jednotky
             }
         }
     }
@@ -473,6 +483,10 @@
       document.getElementById('clock').innerText = now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute:'2-digit', second: '2-digit' });
       document.getElementById('date-display').innerText = now.getDate() + ". " + (now.getMonth() + 1) + ". " + now.getFullYear();
       
+      // DEN V TÝDNU
+      var days = ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"];
+      document.getElementById('day-display').innerText = days[now.getDay()];
+
       var tbodyBus = document.getElementById('tbody-bus');
       if(tbodyBus) updateTimersInDom(tbodyBus);
       var tbodyMetro = document.getElementById('tbody-metro');
