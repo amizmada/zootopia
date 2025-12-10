@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Zootropolis Hub</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#2c1e4a">
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta http-equiv="refresh" content="10800">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* === ZOOTOPIA STYLY === */
+    :root {
+      /* Barvy */
+      --judy-blue: #1A468C;
+      --judy-light: #5B9BD5;
+      --judy-accent: #2DF4FF; 
+      
+      --nick-orange: #E07C24;
+      --nick-green: #6B8E23; 
+      --nick-accent: #FFAD60;
+      
+      --text-main: #FFFFFF;
+      --text-sec: #dcdcdc; 
+      
+      --panel-bg: rgba(20, 10, 35, 0.75); 
+      --border-color: rgba(255, 255, 255, 0.15);
+      
+      --status-warn: #FFD700;
+      --status-alert: #FF453A;
+    }
+
+    * { box-sizing: border-box; }
+
+    body { 
+        background-color: #2a1b52; 
+        background-image: 
+            linear-gradient(to bottom, rgba(20,10,40,0.8), rgba(10,5,20,0.9)), 
+            url('back.jpg'); 
+        background-size: cover;
+        background-position: center bottom;
+        
+        color: var(--text-main); 
+        font-family: 'Nunito', sans-serif;
+        margin: 0; padding: 24px; 
+        height: 100vh; overflow: hidden; 
+        display: -webkit-flex; display: flex; 
+        -webkit-flex-direction: column; flex-direction: column;
+    }
+
+    /* HEADER */
+    header { 
+        display: -webkit-flex; display: flex; 
+        -webkit-justify-content: space-between; justify-content: space-between; 
+        -webkit-align-items: center; align-items: center; 
+        border-bottom: 2px solid rgba(255,255,255,0.1); 
+        padding-bottom: 20px; margin-bottom: 20px; 
+        background: rgba(0,0,0,0.2); 
+        border-radius: 16px;
+        padding: 15px 25px;
+    }
+    
+    .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
+    
+    .date-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
+    
+    .date-large { 
+        font-size: 2.2rem; font-weight: 800; 
+        color: #fff; white-space: nowrap; margin-right: 30px; 
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    /* POČASÍ */
+    .weather-wrap { 
+        display: -webkit-flex; display: flex; 
+        -webkit-align-items: center; align-items: center; 
+        padding-left: 30px; border-left: 2px solid rgba(255,255,255,0.2); 
+        opacity: 0; -webkit-transition: opacity 1s; transition: opacity 1s; 
+    }
+    .weather-icon { width: 56px; height: 56px; margin-right: 15px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+    .weather-icon svg { width: 100%; height: 100%; }
+    
+    .weather-text { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
+    .weather-temp { font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+    .weather-desc { color: #eee; font-size: 1rem; text-transform: lowercase; font-weight: 600; margin-top: 4px; }
+    
+    .clock { 
+        font-size: 4rem; font-weight: 900; color: #fff; 
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+        letter-spacing: -1px;
+    }
+
+    /* GRID */
+    .grid { 
+        display: -webkit-flex; display: flex; 
+        width: 100%; height: 100%; 
+        -webkit-flex: 1; flex: 1;
+        overflow: hidden; 
+    }
+    
+    .panel { 
+        -webkit-flex: 1; flex: 1; 
+        background: var(--panel-bg); 
+        border-radius: 24px; 
+        margin: 0 12px; 
+        display: -webkit-flex; display: flex; 
+        -webkit-flex-direction: column; flex-direction: column; 
+        overflow: hidden; 
+        border: 2px solid var(--border-color);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        position: relative;
+        backdrop-filter: blur(5px);
+    }
+
+    /* Nick's Panel (BUS) */
+    .panel.bus { border-top: 6px solid var(--nick-orange); }
+    .panel.bus .panel-head { background: linear-gradient(90deg, rgba(224, 124, 36, 0.15) 0%, transparent 100%); }
+    
+    /* Judy's Panel (METRO) */
+    .panel.metro { border-top: 6px solid var(--judy-blue); }
+    .panel.metro .panel-head { background: linear-gradient(90deg, rgba(26, 70, 140, 0.25) 0%, transparent 100%); }
+
+    .panel-head { 
+        padding: 20px 24px; 
+        border-bottom: 1px solid rgba(255,255,255,0.1); 
+        display: -webkit-flex; display: flex; 
+        -webkit-align-items: center; align-items: center; 
+        z-index: 1;
+    }
+    
+    /* OBRÁZKY POSTAV */
+    .char-img { 
+        width: 64px; height: 64px; margin-right: 15px; 
+        border-radius: 50%; 
+        border: 3px solid #fff;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        object-fit: cover; 
+        background-color: #000;
+    }
+    
+    .bus .char-img { border-color: var(--nick-orange); }
+    .metro .char-img { border-color: var(--judy-accent); }
+
+    .panel-title { font-weight: 800; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+    
+    .list-container { -webkit-flex: 1; flex: 1; overflow-y: hidden; padding: 10px 0; z-index: 1; }
+    table { width: 100%; border-collapse: collapse; }
+    tr { height: 72px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    td { padding: 0 24px; vertical-align: middle; }
+    
+    /* Badges */
+    .badge { 
+        border-radius: 10px; font-weight: 800; font-size: 1.4rem; 
+        display: inline-block; width: 60px; height: 40px; line-height: 40px; text-align: center; 
+        color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .bus .badge { background: var(--nick-green); color: #fff; border: 1px solid rgba(255,255,255,0.2); } 
+    .metro .badge { background: var(--judy-blue); color: #fff; border: 1px solid rgba(255,255,255,0.2); } 
+    
+    .td-dest { font-size: 1.3rem; font-weight: 700; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+    
+    /* ZVĚTŠENÍ ŠÍŘKY SLOUPCE PRO ČAS */
+    .td-time { 
+        text-align: right; 
+        width: 180px; 
+    }
+    
+    .countdown-wrap { 
+        display: -webkit-flex; display: flex; 
+        -webkit-justify-content: flex-end; justify-content: flex-end; 
+        -webkit-align-items: baseline; align-items: baseline; 
+        margin-bottom: 2px;
+    }
+    .val { font-size: 1.9rem; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+    .unit { font-size: 1rem; color: #ccc; margin-left: 4px; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+    
+    /* ZAROVNÁNÍ ČASU ODJEZDU */
+    .real-time-row { 
+        display: -webkit-flex; display: flex; 
+        -webkit-justify-content: flex-end; justify-content: flex-end;
+        -webkit-align-items: center; align-items: center;
+        margin-top: 2px;
+        white-space: nowrap; 
+    }
+    
+    .sched-time { font-size: 1.1rem; color: #ddd; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+    
+    .status-now .val { color: #FF453A; text-shadow: 0 0 10px rgba(255, 69, 58, 0.6); }
+    .status-soon .val { color: #FFD700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.4); }
+    
+    .delay-pill { 
+        font-size: 0.8rem; font-weight: 800; color: #000; background-color: #FFD700;
+        margin-left: 8px; padding: 3px 8px; border-radius: 6px; display: inline-block;
+        white-space: nowrap; 
+    }
+
+    #error-console { position: absolute; top: 0; left: 0; width: 100%; background: #900; color: white; font-size: 14px; padding: 15px; display: none; z-index: 9999; }
+
+    /* MOBILE & TABLET PORTRAIT */
+    @media (max-width: 900px) {
+        body { padding: 12px; overflow-y: auto; height: auto; display: block; }
+        header { -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: flex-start; align-items: flex-start; padding: 15px; }
+        .clock { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; }
+        .date-row { -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: flex-start; align-items: flex-start; }
+        .weather-wrap { margin-left: 0; padding-left: 0; border-left: none; margin-top: 10px; height: auto; }
+        .grid { -webkit-flex-direction: column; flex-direction: column; height: auto; display: block; }
+        .panel { margin: 0 0 20px 0; height: 380px; }
+    }
+
+    /* TABLET LANDSCAPE */
+    @media (max-width: 900px) and (orientation: landscape) {
+        body { overflow: hidden; padding: 16px; height: 100vh; display: -webkit-flex; display: flex; }
+        header { -webkit-flex-direction: row; flex-direction: row; -webkit-align-items: center; align-items: center; }
+        .clock { position: relative; top: auto; right: auto; margin: 0; font-size: 2.8rem; }
+        .date-row { -webkit-flex-direction: row; flex-direction: row; -webkit-align-items: center; align-items: center; }
+        .weather-wrap { margin-left: 20px; padding-left: 20px; border-left: 2px solid rgba(255,255,255,0.2); margin-top: 0; }
+        .grid { display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row; height: 100%; }
+        .panel { -webkit-flex: 1; flex: 1; margin: 0 10px; height: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="error-console"></div>
+
+  <header>
+    <div class="header-left">
+      <div class="date-row">
+        <div>
+            <div id="date-display" class="date-large">...</div>
+        </div>
+        <div class="weather-wrap" id="weather-box">
+          <div id="weather-icon" class="weather-icon"></div>
+          <div class="weather-text">
+             <span id="weather-temp" class="weather-temp">--°</span>
+             <span id="weather-desc" class="weather-desc"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="clock" class="clock">--:--</div>
+  </header>
+
+  <div class="grid">
+    <!-- PANEL BUS (NICK WILDE) -->
+    <div class="panel bus">
+      <div class="panel-head">
+        <!-- OBRÁZEK NICK -->
+        <img src="nick.jpg" class="char-img" alt="Nick">
+        <div style="-webkit-flex:1; flex:1">
+            <span class="panel-title" style="color:#E07C24">Nickovy Spoje</span>
+            <div style="font-size:0.8rem; color:#ddd; font-weight:bold; opacity:0.8">LITOCHLEBSKÉ NÁMĚSTÍ</div>
+        </div>
+        <span id="err-bus" style="display:none; color:red; font-size:0.7rem; font-weight:bold;">NAČÍTÁM</span>
+      </div>
+      <div class="list-container">
+        <table><tbody id="tbody-bus"></tbody></table>
+      </div>
+    </div>
+
+    <!-- PANEL METRO (JUDY HOPPS) -->
+    <div class="panel metro">
+      <div class="panel-head">
+        <!-- OBRÁZEK JUDY -->
+        <img src="judy.jpg" class="char-img" alt="Judy">
+        <div style="-webkit-flex:1; flex:1">
+            <span class="panel-title" style="color:#2DF4FF">Judy Expres</span>
+            <div style="font-size:0.8rem; color:#ddd; font-weight:bold; opacity:0.8">METRO C – OPATOV</div>
+        </div>
+        <span id="err-metro" style="display:none; color:red; font-size:0.7rem; font-weight:bold;">NAČÍTÁM</span>
+      </div>
+      <div class="list-container">
+        <table><tbody id="tbody-metro"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- JS LOGIKA (ES5 pro staré tablety) ---
+
+    window.onerror = function(msg, url, line) {
+       var el = document.getElementById('error-console');
+       if(el) { el.style.display = 'block'; el.innerText = "Error: " + msg + " (" + line + ")"; }
+       return false;
+    };
+
+    var API_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDE1NCwiaWF0IjoxNzYzMDQ0OTYyLCJleHAiOjExNzYzMDQ0OTYyLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYWI3ZTJlMjYtYmVjZS00MGNhLTlkYTItZGY1MzEzMjNmOTRhIn0.5P9OjGHaDP4wJ4f6w05fQZR1UARUgxk2gBuwDjpVrWU";
+    var API_BASE = "https://api.golemio.cz/v2/pid/departureboards";
+    var WEATHER_API = "https://api.open-meteo.com/v1/forecast?latitude=50.03&longitude=14.51&current_weather=true";
+    var REFRESH_INTERVAL = 15000;
+    
+    var PANELS = [
+      {
+        id: 'bus',
+        url: API_BASE + "?ids=U344Z4P&limit=20&minutesAfter=90&preferredTimezone=Europe/Prague",
+        tbodyId: 'tbody-bus', errElId: 'err-bus',
+        filter: function(d) { 
+            if (!d.route) return false;
+            var num = d.route.short_name || d.route.number;
+            return ["177", "181", "182"].indexOf(num) !== -1;
+        }
+      },
+      {
+        id: 'metro',
+        url: API_BASE + "?names=Opatov&limit=50&minutesAfter=90&preferredTimezone=Europe/Prague",
+        tbodyId: 'tbody-metro', errElId: 'err-metro',
+        filter: function(d) {
+            if (!d.route || !d.trip) return false;
+            return d.route.short_name === "C" && d.trip.headsign !== "Háje";
+        }
+      }
+    ];
+
+    var W_ICONS = {
+        0: '<circle cx="28" cy="28" r="14" fill="#FFD700" /><g stroke="#FFD700" stroke-width="4" stroke-linecap="round"><line x1="28" y1="4" x2="28" y2="8" /><line x1="28" y1="48" x2="28" y2="52" /><line x1="4" y1="28" x2="8" y2="28" /><line x1="48" y1="28" x2="52" y2="28" /><line x1="11" y1="11" x2="14" y2="14" /><line x1="42" y1="42" x2="45" y2="45" /><line x1="11" y1="45" x2="14" y2="42" /><line x1="42" y1="14" x2="45" y2="11" /></g>',
+        1: '<circle cx="20" cy="20" r="10" fill="#FFD700" /><path d="M44,36c0-6.6-5.4-12-12-12c-1.6,0-3.1,0.3-4.5,0.9c-1.7-4.6-6.1-7.9-11.2-7.9c-6.6,0-12,5.4-12,12c0,0.3,0,0.7,0.1,1C2.5,30.8,1,33.2,1,36c0,4.4,3.6,8,8,8h35c4.4,0,8-3.6,8-8S48.4,36,44,36z" fill="#BDB2CF" />',
+        2: '<path d="M44,36c0-6.6-5.4-12-12-12c-1.6,0-3.1,0.3-4.5,0.9c-1.7-4.6-6.1-7.9-11.2-7.9c-6.6,0-12,5.4-12,12c0,0.3,0,0.7,0.1,1C2.5,30.8,1,33.2,1,36c0,4.4,3.6,8,8,8h35c4.4,0,8-3.6,8-8S48.4,36,44,36z" fill="#BDB2CF" opacity="0.9"/>',
+        3: '<path d="M44,36c0-6.6-5.4-12-12-12c-1.6,0-3.1,0.3-4.5,0.9c-1.7-4.6-6.1-7.9-11.2-7.9c-6.6,0-12,5.4-12,12c0,0.3,0,0.7,0.1,1C2.5,30.8,1,33.2,1,36c0,4.4,3.6,8,8,8h35c4.4,0,8-3.6,8-8S48.4,36,44,36z" fill="#7A6F8F"/>',
+        61: '<path d="M44,32c0-6.6-5.4-12-12-12c-1.6,0-3.1,0.3-4.5,0.9c-1.7-4.6-6.1-7.9-11.2-7.9c-6.6,0-12,5.4-12,12c0,0.3,0,0.7,0.1,1C2.5,26.8,1,29.2,1,32c0,4.4,3.6,8,8,8h35c4.4,0,8-3.6,8-8S48.4,32,44,32z" fill="#7A6F8F"/><line x1="20" y1="42" x2="16" y2="52" stroke="#2DF4FF" stroke-width="4" stroke-linecap="round"/><line x1="30" y1="42" x2="26" y2="52" stroke="#2DF4FF" stroke-width="4" stroke-linecap="round"/><line x1="40" y1="42" x2="36" y2="52" stroke="#2DF4FF" stroke-width="4" stroke-linecap="round"/>',
+    };
+
+    function ajaxGet(url, token, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        if (token) xhr.setRequestHeader("x-access-token", token);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try { callback(null, JSON.parse(xhr.responseText)); } catch (e) { callback("JSON Error", null); }
+                } else { callback("HTTP " + xhr.status, null); }
+            }
+        };
+        xhr.send();
+    }
+
+    function formatHM(date) {
+        var h = ("0" + date.getHours()).slice(-2);
+        var m = ("0" + date.getMinutes()).slice(-2);
+        return h + ":" + m;
+    }
+
+    function getDelayHTML(scheduled, predicted) {
+      if (!scheduled || !predicted) return "";
+      var diffMs = predicted - scheduled;
+      var delayMin = Math.round(diffMs / 60000);
+      if (delayMin === 0) return "";
+      return '<span class="delay-pill">' + (delayMin > 0 ? "+" : "") + delayMin + ' min</span>';
+    }
+
+    function loadPanelData(panel) {
+        var tbody = document.getElementById(panel.tbodyId);
+        ajaxGet(panel.url, API_TOKEN, function(err, data) {
+            if (err) return;
+            var raw = data.departures || [];
+            var items = [];
+            for (var i = 0; i < raw.length; i++) {
+                var d = raw[i];
+                try { if (!panel.filter(d)) continue; } catch(e) { continue; }
+                var ts = d.departure_timestamp || {};
+                var eff = ts.predicted ? new Date(ts.predicted) : (ts.scheduled ? new Date(ts.scheduled) : null);
+                if (!eff) continue;
+                
+                var delayHtml = "";
+                if (ts.scheduled && ts.predicted) {
+                    var diff = Math.round((new Date(ts.predicted) - new Date(ts.scheduled)) / 60000);
+                    if (diff > 0) delayHtml = '<span class="delay-pill">+' + diff + ' min</span>';
+                }
+
+                items.push({
+                    line: (d.route && d.route.short_name) ? d.route.short_name : "?",
+                    dest: (d.trip && d.trip.headsign) ? d.trip.headsign : "?",
+                    schedTime: ts.scheduled ? formatHM(new Date(ts.scheduled)) : "",
+                    ts: eff.getTime(),
+                    delayHtml: delayHtml
+                });
+            }
+            items.sort(function(a, b) { return a.ts - b.ts; });
+            items = items.slice(0, 7);
+
+            var html = "";
+            if (items.length === 0) html = '<tr><td colspan="3" style="text-align:center; padding:20px; color:#aaa">Zootropolis spí...</td></tr>';
+            else {
+                for (var j = 0; j < items.length; j++) {
+                    var item = items[j];
+                    html += '<tr data-ts="' + item.ts + '">' +
+                        '<td><div class="badge">' + item.line + '</div></td>' +
+                        '<td class="td-dest">' + item.dest + '</td>' +
+                        '<td class="td-time">' +
+                            '<div class="countdown-wrap"><span class="val">--</span><span class="unit">min</span></div>' +
+                            '<div class="real-time-row">' + 
+                                '<span class="sched-time">' + item.schedTime + '</span>' + 
+                                item.delayHtml + 
+                            '</div>' +
+                        '</td>' +
+                        '</tr>';
+                }
+            }
+            if(tbody) { tbody.innerHTML = html; updateTimersInDom(tbody); }
+        });
+    }
+
+    function loadWeather() {
+        ajaxGet(WEATHER_API, null, function(err, data) {
+            if (err) return;
+            if (data.current_weather) {
+                var t = Math.round(data.current_weather.temperature);
+                document.getElementById('weather-temp').innerText = t + "°";
+                
+                var code = data.current_weather.weathercode;
+                var svg = W_ICONS[0]; // Default Sun
+                if (code > 0) svg = W_ICONS[1];
+                if (code > 2) svg = W_ICONS[3];
+                if (code >= 51) svg = W_ICONS[61];
+                
+                document.getElementById('weather-icon').innerHTML = '<svg viewBox="0 0 56 56">' + svg + '</svg>';
+                
+                var desc = "slunečno";
+                if(code > 0) desc = "pod mrakem";
+                if(code >= 51) desc = "prší";
+                document.getElementById('weather-desc').innerText = desc;
+                document.getElementById('weather-box').style.opacity = 1;
+            }
+        });
+    }
+
+    function updateTimersInDom(tbody) {
+        if(!tbody) return;
+        var now = new Date().getTime();
+        var rows = tbody.querySelectorAll('tr[data-ts]');
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var targetTs = parseInt(row.getAttribute('data-ts'));
+            var diffSec = Math.floor((targetTs - now) / 1000);
+            var valEl = row.querySelector('.val');
+            var unitEl = row.querySelector('.unit');
+            
+            valEl.style.color = "#fff";
+            
+            if (diffSec < -30) { row.style.display = 'none'; }
+            else {
+                var text = "";
+                var unit = "";
+                if (diffSec <= 0) { text = "TEĎ"; valEl.style.color = "#FF453A"; }
+                else {
+                    var m = Math.floor(diffSec / 60);
+                    var s = diffSec % 60;
+                    if (m === 0) {
+                        text = s; unit = "s"; valEl.style.color = "#FF453A";
+                    } else {
+                        text = m; unit = "min";
+                        if (m < 5) valEl.style.color = "#FFD700";
+                    }
+                }
+                valEl.innerText = text;
+                // FIX: Ochrana proti null reference (přidána podmínka)
+                if(unitEl) unitEl.innerText = unit; 
+            }
+        }
+    }
+
+    function tick() {
+      var now = new Date();
+      document.getElementById('clock').innerText = now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute:'2-digit', second: '2-digit' });
+      document.getElementById('date-display').innerText = now.getDate() + ". " + (now.getMonth() + 1) + ". " + now.getFullYear();
+      
+      var tbodyBus = document.getElementById('tbody-bus');
+      if(tbodyBus) updateTimersInDom(tbodyBus);
+      var tbodyMetro = document.getElementById('tbody-metro');
+      if(tbodyMetro) updateTimersInDom(tbodyMetro);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        tick();
+        loadPanelData(PANELS[0]);
+        loadPanelData(PANELS[1]);
+        loadWeather();
+        setInterval(tick, 1000);
+        setInterval(function(){ loadPanelData(PANELS[0]); loadPanelData(PANELS[1]); }, REFRESH_INTERVAL); 
+        setInterval(loadWeather, 900000);
+    });
+  </script>
+</body>
+</html>
