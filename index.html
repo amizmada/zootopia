@@ -4,15 +4,20 @@
   <meta charset="UTF-8" />
   <title>Zootropolis Hub</title>
   
+  <!-- META TAGY PRO FULLSCREEN (KIOSK) -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#2c1e4a">
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <!-- IKONY -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  
   <link rel="manifest" href="manifest.json">
   <meta http-equiv="refresh" content="10800">
 
+  <!-- FONT NUNITO -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -43,6 +48,7 @@
 
     body { 
         background-color: #2a1b52; 
+        /* Pozadí města */
         background-image: 
             linear-gradient(to bottom, rgba(20,10,40,0.8), rgba(10,5,20,0.9)), 
             url('back.jpg'); 
@@ -70,13 +76,16 @@
     }
     
     .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
-
-    /* DEN V TÝDNU */
+    
+    /* NADPIS - DEN V TÝDNU */
     h1 { 
-      margin: 0; font-size: 1.1rem; font-weight: 700; 
-      text-transform: uppercase; letter-spacing: 2px; 
-      color: var(--text-sec); /* Jemnější barva pro den */
-      margin-bottom: 4px;
+        margin: 0; font-size: 1.4rem; font-weight: 900; 
+        text-transform: uppercase; letter-spacing: 2px; 
+        background: linear-gradient(90deg, #E07C24, #2DF4FF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 5px;
+        text-shadow: 0 0 20px rgba(255,255,255,0.1);
     }
     
     .date-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
@@ -126,19 +135,18 @@
         border: 2px solid var(--border-color);
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         position: relative;
-        backdrop-filter: blur(5px);
     }
 
     /* Nick's Panel (BUS) */
     .panel.bus { border-top: 6px solid var(--nick-orange); }
-    .panel.bus .panel-head { background: linear-gradient(90deg, rgba(224, 124, 36, 0.15) 0%, transparent 100%); }
+    .panel.bus .panel-head { background: linear-gradient(90deg, rgba(224, 124, 36, 0.25) 0%, transparent 100%); }
     
     /* Judy's Panel (METRO) */
     .panel.metro { border-top: 6px solid var(--judy-blue); }
-    .panel.metro .panel-head { background: linear-gradient(90deg, rgba(26, 70, 140, 0.25) 0%, transparent 100%); }
+    .panel.metro .panel-head { background: linear-gradient(90deg, rgba(26, 70, 140, 0.35) 0%, transparent 100%); }
 
     .panel-head { 
-        padding: 20px 24px; 
+        padding: 15px 24px; 
         border-bottom: 1px solid rgba(255,255,255,0.1); 
         display: -webkit-flex; display: flex; 
         -webkit-align-items: center; align-items: center; 
@@ -147,12 +155,13 @@
     
     /* OBRÁZKY POSTAV */
     .char-img { 
-        width: 64px; height: 64px; margin-right: 15px; 
+        width: 70px; height: 70px; margin-right: 15px; 
         border-radius: 50%; 
         border: 3px solid #fff;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         object-fit: cover; 
         background-color: #000;
+        object-position: center top; 
     }
     
     .bus .char-img { border-color: var(--nick-orange); }
@@ -242,9 +251,9 @@
 
   <header>
     <div class="header-left">
-      <!-- DEN V TÝDNU PŘIDÁN ZDE -->
-      <h1 id="day-display">...</h1>
-
+      <!-- NOVÝ NADPIS - ID MAIN-TITLE -->
+      <h1 id="main-title">NAČÍTÁM...</h1>
+      
       <div class="date-row">
         <div>
             <div id="date-display" class="date-large">...</div>
@@ -266,6 +275,7 @@
     <div class="panel bus">
       <div class="panel-head">
         <!-- OBRÁZEK NICK -->
+        <!-- Zkuste nahrát soubor nick.jpg, nebo použijte tento fallback -->
         <img src="nick.jpg" class="char-img" alt="Nick">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#E07C24">Nickovy Spoje</span>
@@ -281,7 +291,7 @@
     <!-- PANEL METRO (JUDY HOPPS) -->
     <div class="panel metro">
       <div class="panel-head">
-        <!-- OBRÁZEK JUDY -->
+        <!-- OBRÁZEK JUDY (VAŠE NAHRANÁ FOTKA) -->
         <img src="judy.jpg" class="char-img" alt="Judy">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#2DF4FF">Judy Expres</span>
@@ -483,9 +493,11 @@
       document.getElementById('clock').innerText = now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute:'2-digit', second: '2-digit' });
       document.getElementById('date-display').innerText = now.getDate() + ". " + (now.getMonth() + 1) + ". " + now.getFullYear();
       
-      // DEN V TÝDNU
-      var days = ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"];
-      document.getElementById('day-display').innerText = days[now.getDay()];
+      // ZMĚNA: Nastavení dne v týdnu
+      var days = ["NEDĚLE", "PONDĚLÍ", "ÚTERÝ", "STŘEDA", "ČTVRTEK", "PÁTEK", "SOBOTA"];
+      var dayName = days[now.getDay()];
+      var elTitle = document.getElementById('main-title');
+      if(elTitle) elTitle.innerText = dayName;
 
       var tbodyBus = document.getElementById('tbody-bus');
       if(tbodyBus) updateTimersInDom(tbodyBus);
