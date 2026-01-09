@@ -31,7 +31,6 @@
       --text-main: #FFFFFF;
       --text-sec: #dcdcdc; 
       
-      /* ZMĚNA: Sytější pozadí panelů pro lepší čitelnost */
       --panel-bg: rgba(20, 10, 35, 0.85); 
       --border-color: rgba(255, 255, 255, 0.15);
       
@@ -65,7 +64,7 @@
         background: rgba(0,0,0,0.4); 
         border-radius: 16px;
         padding: 15px 25px;
-        -webkit-flex: 0 0 auto; flex: 0 0 auto; /* Header se nesmršťuje */
+        -webkit-flex: 0 0 auto; flex: 0 0 auto; 
     }
     
     .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
@@ -111,7 +110,7 @@
     .grid { 
         display: -webkit-flex; display: flex; 
         width: 100%; 
-        -webkit-flex: 1; flex: 1; /* Grid zabere zbytek výšky */
+        -webkit-flex: 1; flex: 1; 
         overflow: hidden; 
     }
     
@@ -124,7 +123,6 @@
         -webkit-flex-direction: column; flex-direction: column; 
         overflow: hidden; 
         border: 2px solid var(--border-color);
-        /* ZMĚNA: Stín odstraněn, aby to vypadalo čistěji */
         box-shadow: none;
         position: relative;
     }
@@ -141,7 +139,7 @@
         display: -webkit-flex; display: flex; 
         -webkit-align-items: center; align-items: center; 
         z-index: 1;
-        -webkit-flex: 0 0 auto; flex: 0 0 auto; /* Hlavička panelu se nesmršťuje */
+        -webkit-flex: 0 0 auto; flex: 0 0 auto; 
     }
     
     .char-img { 
@@ -169,11 +167,10 @@
 
     .panel-title { font-weight: 800; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
     
-    /* ZMĚNA: Povolení scrollování v seznamu spojů */
     .list-container { 
         -webkit-flex: 1; flex: 1; 
-        overflow-y: auto; /* Zapnout scroll */
-        -webkit-overflow-scrolling: touch; /* Plynulý scroll na iOS/Android */
+        overflow-y: auto; 
+        -webkit-overflow-scrolling: touch; 
         padding: 0; 
         z-index: 1; 
     }
@@ -210,52 +207,100 @@
 
     #error-console { position: absolute; top: 0; left: 0; width: 100%; background: #900; color: white; font-size: 14px; padding: 15px; display: none; z-index: 9999; }
 
-    /* === MOBILNÍ & TABLET ZOBRAZENÍ === */
+    /* === MOBILNÍ & TABLET ZOBRAZENÍ (Portrait) === */
     @media (max-width: 900px) {
         body { 
             padding: 10px; 
-            overflow: hidden; /* Na mobilu taky chceme aplikaci bez scrollu body */
-            height: 100vh;
-            display: -webkit-flex; display: flex;
+            /* Povolíme scroll celého body, kdyby se to nevešlo */
+            overflow-y: auto; 
+            height: auto; 
+            display: block; 
         }
         
         header { 
-            -webkit-flex-direction: column; flex-direction: column; 
-            -webkit-align-items: flex-start; align-items: flex-start; 
+            display: block; /* Blokové zobrazení pro absolutní pozicování hodin */
+            position: relative;
             padding: 10px 15px;
             margin-bottom: 10px;
         }
-        .clock { position: absolute; top: 10px; right: 15px; font-size: 1.8rem; margin-top: 0; }
-        .date-row { -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: flex-start; align-items: flex-start; }
-        .weather-wrap { margin-left: 0; padding-left: 0; border-left: none; margin-top: 5px; height: auto; }
+
+        /* Den v týdnu - Vlevo nahoře */
+        .header-left { display: block; }
+        h1 { 
+            font-size: 1rem; margin: 0; 
+            display: inline-block; 
+        }
+
+        /* Hodiny - Absolutně vpravo nahoře */
+        .clock { 
+            position: absolute; top: 8px; right: 15px; 
+            font-size: 1.8rem; margin: 0;
+            line-height: 1;
+        }
+
+        /* Řádek s Datem a Počasím */
+        .date-row { 
+            display: -webkit-flex; display: flex;
+            -webkit-align-items: center; align-items: center;
+            margin-top: 5px;
+        }
+
+        .date-large { 
+            font-size: 1.4rem; 
+            margin-right: 15px; 
+        }
         
+        .weather-wrap { 
+            margin: 0; padding: 0; 
+            border: none; height: auto;
+            padding-left: 0; /* Zrušit padding z desktopu */
+        }
+
+        .weather-icon { width: 32px; height: 32px; margin-right: 8px; }
+        .weather-temp { font-size: 1.4rem; }
+        .weather-desc { display: none; } /* Na mobilu skryjeme popis */
+        
+        /* Grid pod sebe */
         .grid { 
-            -webkit-flex-direction: column; flex-direction: column; 
-            -webkit-flex: 1; flex: 1;
-            overflow: hidden; /* Aby scrollovaly jen panely */
-            gap: 10px;
+            display: block; 
+            height: auto; 
+            overflow: visible;
         }
         
         .panel { 
-            margin: 0; 
-            -webkit-flex: 1; flex: 1; /* Panely se roztáhnou, aby vyplnily místo */
-            min-height: 0; /* Důležité pro scroll uvnitř flex itemu */
+            margin: 0 0 15px 0; 
+            height: auto; 
+            min-height: 350px; /* Aby se dalo scrollovat uvnitř */
         }
         
         .panel-head { padding: 10px 15px; }
         .char-img { width: 50px; height: 50px; }
         .panel-title { font-size: 1.1rem; }
+        
+        /* Zmenšení písma v tabulce pro mobil */
+        .td-dest { font-size: 1.1rem; }
+        .val { font-size: 1.5rem; }
     }
 
-    /* TABLET LANDSCAPE */
+    /* TABLET LANDSCAPE (Zůstává 2 sloupce) */
     @media (max-width: 900px) and (orientation: landscape) {
-        body { padding: 10px; }
-        header { -webkit-flex-direction: row; flex-direction: row; -webkit-align-items: center; align-items: center; }
+        body { overflow: hidden; padding: 10px; height: 100vh; display: -webkit-flex; display: flex; }
+        header { display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row; -webkit-justify-content: space-between; justify-content: space-between; -webkit-align-items: center; align-items: center; }
+        
+        .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
+        h1 { display: block; font-size: 1rem; }
+        
         .clock { position: relative; top: auto; right: auto; margin: 0; font-size: 2.5rem; }
-        .date-row { -webkit-flex-direction: row; flex-direction: row; -webkit-align-items: center; align-items: center; }
-        .weather-wrap { margin-left: 15px; padding-left: 15px; border-left: 2px solid rgba(255,255,255,0.2); margin-top: 0; }
-        .grid { -webkit-flex-direction: row; flex-direction: row; gap: 10px; }
-        .panel { margin: 0; }
+        .date-row { margin-top: 0; }
+        .date-large { font-size: 1.8rem; }
+        
+        .weather-wrap { padding-left: 20px; border-left: 2px solid rgba(255,255,255,0.2); }
+        .weather-icon { width: 48px; height: 48px; }
+        .weather-temp { font-size: 1.8rem; }
+        .weather-desc { display: block; font-size: 0.8rem; }
+
+        .grid { display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row; gap: 10px; height: 100%; }
+        .panel { -webkit-flex: 1; flex: 1; margin: 0; height: 100%; }
     }
   </style>
 </head>
@@ -303,7 +348,6 @@
     <!-- PANEL METRO -->
     <div class="panel metro">
       <div class="panel-head">
-        <!-- ZMĚNA: Použití judy.jpg -->
         <img src="judy.jpg" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3')">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#2DF4FF">Judy Expres</span>
@@ -538,6 +582,7 @@
       document.getElementById('clock').innerText = now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute:'2-digit', second: '2-digit' });
       document.getElementById('date-display').innerText = now.getDate() + ". " + (now.getMonth() + 1) + ". " + now.getFullYear();
       
+      // ZMĚNA: Nastavení dne v týdnu
       var days = ["NEDĚLE", "PONDĚLÍ", "ÚTERÝ", "STŘEDA", "ČTVRTEK", "PÁTEK", "SOBOTA"];
       var dayName = days[now.getDay()];
       var elTitle = document.getElementById('main-title');
