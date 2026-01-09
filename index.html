@@ -333,7 +333,8 @@
     <!-- PANEL BUS -->
     <div class="panel bus">
       <div class="panel-head">
-        <img src="nick.jpg" class="char-img" alt="Nick" onclick="toggleMusic(this, 'nick.mp3')">
+        <!-- ZMĚNA: Přidán parametr volume (2.0 = 200%) -->
+        <img src="nick.jpg" class="char-img" alt="Nick" onclick="toggleMusic(this, 'nick.mp3', 3.0)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#E07C24">Nickovy Spoje</span>
             <div style="font-size:0.8rem; color:#ddd; font-weight:bold; opacity:0.8">LITOCHLEBSKÉ NÁMĚSTÍ</div>
@@ -348,7 +349,8 @@
     <!-- PANEL METRO -->
     <div class="panel metro">
       <div class="panel-head">
-        <img src="judy.jpg" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3')">
+        <!-- ZMĚNA: Přidán parametr volume (0.4 = 40%) -->
+        <img src="image_e05d6b.png" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3', 1.0)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#2DF4FF">Judy Expres</span>
             <div style="font-size:0.8rem; color:#ddd; font-weight:bold; opacity:0.8">METRO C – OPATOV</div>
@@ -370,9 +372,37 @@
     };
 
     var currentPlayingImg = null;
+    var audioCtx, source, gainNode;
 
-    function toggleMusic(imgElement, songFile) {
+    // Inicializace Web Audio API pro zesílení (Boost)
+    function initAudioBoost(audioElement) {
+        if (!audioCtx) {
+            try {
+                var AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                    source = audioCtx.createMediaElementSource(audioElement);
+                    gainNode = audioCtx.createGain();
+                    source.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                }
+            } catch(e) {
+                console.log("Web Audio API warning: " + e);
+            }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return gainNode;
+    }
+
+    // ZMĚNA: Přidán parametr volume a logika zesílení
+    function toggleMusic(imgElement, songFile, volume) {
         var audio = document.getElementById('bg-music');
+        
+        // Zkusíme inicializovat zesilovač
+        var boostNode = initAudioBoost(audio);
+
         var isSameSong = audio.getAttribute('data-song') === songFile;
 
         if (!audio.paused && isSameSong) {
@@ -380,6 +410,18 @@
             imgElement.classList.remove('playing');
             currentPlayingImg = null;
         } else {
+            // Nastavíme hlasitost
+            var vol = (volume !== undefined) ? volume : 1.0;
+
+            if (boostNode) {
+                // Pokud máme zesilovač, nastavíme gain (může být > 1.0)
+                audio.volume = 1.0; 
+                boostNode.gain.value = vol;
+            } else {
+                // Fallback: maximálně 1.0
+                audio.volume = (vol > 1.0) ? 1.0 : vol;
+            }
+
             if (!isSameSong) {
                 audio.src = songFile;
                 audio.setAttribute('data-song', songFile);
@@ -494,7 +536,7 @@
                 });
             }
             items.sort(function(a, b) { return a.ts - b.ts; });
-            // ZMĚNA: Zvýšil jsem limit zobrazených spojů na 15, aby bylo možné scrollovat
+            // ZMĚNA: Limit pro scroll
             items = items.slice(0, 15);
 
             var html = "";
@@ -582,7 +624,6 @@
       document.getElementById('clock').innerText = now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute:'2-digit', second: '2-digit' });
       document.getElementById('date-display').innerText = now.getDate() + ". " + (now.getMonth() + 1) + ". " + now.getFullYear();
       
-      // ZMĚNA: Nastavení dne v týdnu
       var days = ["NEDĚLE", "PONDĚLÍ", "ÚTERÝ", "STŘEDA", "ČTVRTEK", "PÁTEK", "SOBOTA"];
       var dayName = days[now.getDay()];
       var elTitle = document.getElementById('main-title');
