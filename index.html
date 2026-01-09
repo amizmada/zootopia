@@ -270,7 +270,7 @@
   <div id="error-console"></div>
   
   <!-- HUDEBNÍ PŘEHRÁVAČ -->
-  <audio id="bg-music" src="song.mp3"></audio>
+  <audio id="bg-music"></audio>
 
   <header>
     <div class="header-left">
@@ -297,8 +297,8 @@
     <!-- PANEL BUS (NICK WILDE) -->
     <div class="panel bus">
       <div class="panel-head">
-        <!-- OBRÁZEK NICK + ONCLICK -->
-        <img src="nick.jpg" class="char-img" alt="Nick" onclick="toggleMusic(this)">
+        <!-- OBRÁZEK NICK + ONCLICK - Pustí nick.mp3 -->
+        <img src="nick.jpg" class="char-img" alt="Nick" onclick="toggleMusic(this, 'nick.mp3')">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#E07C24">Nickovy Spoje</span>
             <div style="font-size:0.8rem; color:#ddd; font-weight:bold; opacity:0.8">LITOCHLEBSKÉ NÁMĚSTÍ</div>
@@ -313,8 +313,8 @@
     <!-- PANEL METRO (JUDY HOPPS) -->
     <div class="panel metro">
       <div class="panel-head">
-        <!-- OBRÁZEK JUDY + ONCLICK -->
-        <img src="judy.jpg" class="char-img" alt="Judy" onclick="toggleMusic(this)">
+        <!-- OBRÁZEK JUDY + ONCLICK - Pustí judy.mp3 -->
+        <img src="image_e05d6b.png" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3')">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#2DF4FF">Judy Expres</span>
             <div style="font-size:0.8rem; color:#ddd; font-weight:bold; opacity:0.8">METRO C – OPATOV</div>
@@ -336,27 +336,48 @@
        return false;
     };
 
-    // FUNKCE PRO HUDBU
-    function toggleMusic(imgElement) {
+    // Globální proměnná pro sledování aktuálně hrajícího obrázku
+    var currentPlayingImg = null;
+
+    // UPRAVENÁ FUNKCE PRO HUDBU - PŘIJÍMÁ SOUBOR
+    function toggleMusic(imgElement, songFile) {
         var audio = document.getElementById('bg-music');
         
-        if (audio.paused) {
+        // Zjistíme, zda už hraje tato konkrétní písnička (podle atributu data-song)
+        var isSameSong = audio.getAttribute('data-song') === songFile;
+
+        if (!audio.paused && isSameSong) {
+            // Pokud hraje a klikli jsme na stejnou -> PAUZA
+            audio.pause();
+            imgElement.classList.remove('playing');
+            currentPlayingImg = null;
+        } else {
+            // Pokud hraje něco jiného nebo je pauza
+            if (!isSameSong) {
+                // Změna zdroje
+                audio.src = songFile;
+                audio.setAttribute('data-song', songFile);
+            }
+            
             var playPromise = audio.play();
+            
+            // UI Update: Vypnout animaci u předchozího obrázku
+            if (currentPlayingImg && currentPlayingImg !== imgElement) {
+                currentPlayingImg.classList.remove('playing');
+            }
+            
             if (playPromise !== undefined) {
                 playPromise.then(function() {
+                    // Přehrávání začalo
                     imgElement.classList.add('playing');
+                    currentPlayingImg = imgElement;
                 }).catch(function(error) {
-                    alert("Chyba: Zkontrolujte, zda existuje soubor 'song.mp3' ve stejné složce.\n" + error);
+                    alert("Chyba: Soubor '" + songFile + "' nebyl nalezen ve složce.\n" + error);
                 });
             } else {
+                // Fallback pro staré prohlížeče
                 imgElement.classList.add('playing');
-            }
-        } else {
-            audio.pause();
-            audio.currentTime = 0;
-            var imgs = document.querySelectorAll('.char-img');
-            for(var i=0; i<imgs.length; i++) {
-                imgs[i].classList.remove('playing');
+                currentPlayingImg = imgElement;
             }
         }
     }
@@ -540,7 +561,6 @@
       document.getElementById('clock').innerText = now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute:'2-digit', second: '2-digit' });
       document.getElementById('date-display').innerText = now.getDate() + ". " + (now.getMonth() + 1) + ". " + now.getFullYear();
       
-      // ZMĚNA: Nastavení dne v týdnu
       var days = ["NEDĚLE", "PONDĚLÍ", "ÚTERÝ", "STŘEDA", "ČTVRTEK", "PÁTEK", "SOBOTA"];
       var dayName = days[now.getDay()];
       var elTitle = document.getElementById('main-title');
