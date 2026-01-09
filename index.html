@@ -4,28 +4,22 @@
   <meta charset="UTF-8" />
   <title>Zootropolis Hub</title>
   
-  <!-- META TAGY PRO FULLSCREEN (KIOSK) -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#2c1e4a">
 
-  <!-- IKONY -->
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
-  
   <link rel="manifest" href="manifest.json">
   <meta http-equiv="refresh" content="10800">
 
-  <!-- FONT NUNITO -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
-    /* === ZOOTOPIA STYLY === */
     :root {
-      /* Barvy */
       --judy-blue: #2DF4FF;
       --judy-light: #047beb;
       --judy-accent: #2DF4FF; 
@@ -37,7 +31,8 @@
       --text-main: #FFFFFF;
       --text-sec: #dcdcdc; 
       
-      --panel-bg: rgba(20, 10, 35, 0.75); 
+      /* ZMĚNA: Sytější pozadí panelů pro lepší čitelnost */
+      --panel-bg: rgba(20, 10, 35, 0.85); 
       --border-color: rgba(255, 255, 255, 0.15);
       
       --status-warn: #FFD700;
@@ -48,9 +43,7 @@
 
     body { 
         background-color: #2a1b52; 
-        /* Pozadí města */
-        background-image: 
-            url('back.jpg'); 
+        background-image: url('back.jpg'); 
         background-size: cover;
         background-position: center bottom;
         
@@ -68,15 +61,15 @@
         -webkit-justify-content: space-between; justify-content: space-between; 
         -webkit-align-items: center; align-items: center; 
         border-bottom: 2px solid rgba(255,255,255,0.1); 
-        padding-bottom: 20px; margin-bottom: 20px; 
+        padding-bottom: 15px; margin-bottom: 15px; 
         background: rgba(0,0,0,0.4); 
         border-radius: 16px;
         padding: 15px 25px;
+        -webkit-flex: 0 0 auto; flex: 0 0 auto; /* Header se nesmršťuje */
     }
     
     .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
     
-    /* NADPIS - DEN V TÝDNU */
     h1 { 
         margin: 0; font-size: 1.4rem; font-weight: 900; 
         text-transform: uppercase; letter-spacing: 2px; 
@@ -95,7 +88,6 @@
         text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     
-    /* POČASÍ */
     .weather-wrap { 
         display: -webkit-flex; display: flex; 
         -webkit-align-items: center; align-items: center; 
@@ -118,8 +110,8 @@
     /* GRID */
     .grid { 
         display: -webkit-flex; display: flex; 
-        width: 100%; height: 100%; 
-        -webkit-flex: 1; flex: 1;
+        width: 100%; 
+        -webkit-flex: 1; flex: 1; /* Grid zabere zbytek výšky */
         overflow: hidden; 
     }
     
@@ -132,15 +124,14 @@
         -webkit-flex-direction: column; flex-direction: column; 
         overflow: hidden; 
         border: 2px solid var(--border-color);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        /* ZMĚNA: Stín odstraněn, aby to vypadalo čistěji */
+        box-shadow: none;
         position: relative;
     }
 
-    /* Nick's Panel (BUS) */
     .panel.bus { border-top: 6px solid var(--nick-orange); }
     .panel.bus .panel-head { background: linear-gradient(90deg, rgba(224, 124, 36, 0.25) 0%, transparent 100%); }
     
-    /* Judy's Panel (METRO) */
     .panel.metro { border-top: 6px solid var(--judy-blue); }
     .panel.metro .panel-head { background: linear-gradient(90deg, rgba(26, 70, 140, 0.35) 0%, transparent 100%); }
 
@@ -150,9 +141,9 @@
         display: -webkit-flex; display: flex; 
         -webkit-align-items: center; align-items: center; 
         z-index: 1;
+        -webkit-flex: 0 0 auto; flex: 0 0 auto; /* Hlavička panelu se nesmršťuje */
     }
     
-    /* OBRÁZKY POSTAV - INTERAKTIVNÍ */
     .char-img { 
         width: 70px; height: 70px; margin-right: 15px; 
         border-radius: 50%; 
@@ -161,23 +152,12 @@
         object-fit: cover; 
         background-color: #000;
         object-position: center top; 
-        
-        /* ZMĚNA: Styly pro klikání */
         cursor: pointer;
         transition: transform 0.1s, border-color 0.3s;
     }
     
-    /* Efekt stisknutí */
-    .char-img:active {
-        transform: scale(0.9);
-        border-color: #fff !important;
-    }
-    
-    /* Animace přehrávání */
-    .playing {
-        animation: pulse-border 2s infinite;
-    }
-    
+    .char-img:active { transform: scale(0.9); border-color: #fff !important; }
+    .playing { animation: pulse-border 2s infinite; }
     @keyframes pulse-border {
         0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
         70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
@@ -189,12 +169,19 @@
 
     .panel-title { font-weight: 800; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
     
-    .list-container { -webkit-flex: 1; flex: 1; overflow-y: hidden; padding: 10px 0; z-index: 1; }
+    /* ZMĚNA: Povolení scrollování v seznamu spojů */
+    .list-container { 
+        -webkit-flex: 1; flex: 1; 
+        overflow-y: auto; /* Zapnout scroll */
+        -webkit-overflow-scrolling: touch; /* Plynulý scroll na iOS/Android */
+        padding: 0; 
+        z-index: 1; 
+    }
+    
     table { width: 100%; border-collapse: collapse; }
     tr { height: 72px; border-bottom: 1px solid rgba(255,255,255,0.05); }
     td { padding: 0 24px; vertical-align: middle; }
     
-    /* Badges */
     .badge { 
         border-radius: 10px; font-weight: 800; font-size: 1.4rem; 
         display: inline-block; width: 60px; height: 40px; line-height: 40px; text-align: center; 
@@ -204,31 +191,13 @@
     .metro .badge { background: var(--judy-light); color: #fff; border: 1px solid rgba(255,255,255,0.2); } 
     
     .td-dest { font-size: 1.3rem; font-weight: 700; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+    .td-time { text-align: right; width: 180px; }
     
-    /* ZVĚTŠENÍ ŠÍŘKY SLOUPCE PRO ČAS */
-    .td-time { 
-        text-align: right; 
-        width: 180px; 
-    }
-    
-    .countdown-wrap { 
-        display: -webkit-flex; display: flex; 
-        -webkit-justify-content: flex-end; justify-content: flex-end; 
-        -webkit-align-items: baseline; align-items: baseline; 
-        margin-bottom: 2px;
-    }
+    .countdown-wrap { display: -webkit-flex; display: flex; -webkit-justify-content: flex-end; justify-content: flex-end; -webkit-align-items: baseline; align-items: baseline; margin-bottom: 2px; }
     .val { font-size: 1.9rem; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
     .unit { font-size: 1rem; color: #ccc; margin-left: 4px; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
     
-    /* ZAROVNÁNÍ ČASU ODJEZDU */
-    .real-time-row { 
-        display: -webkit-flex; display: flex; 
-        -webkit-justify-content: flex-end; justify-content: flex-end;
-        -webkit-align-items: center; align-items: center;
-        margin-top: 2px;
-        white-space: nowrap; 
-    }
-    
+    .real-time-row { display: -webkit-flex; display: flex; -webkit-justify-content: flex-end; justify-content: flex-end; -webkit-align-items: center; align-items: center; margin-top: 2px; white-space: nowrap; }
     .sched-time { font-size: 1.1rem; color: #ddd; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
     
     .status-now .val { color: #FF453A; text-shadow: 0 0 10px rgba(255, 69, 58, 0.6); }
@@ -236,32 +205,57 @@
     
     .delay-pill { 
         font-size: 0.8rem; font-weight: 800; color: #000; background-color: #FFD700;
-        margin-left: 8px; padding: 3px 8px; border-radius: 6px; display: inline-block;
-        white-space: nowrap; 
+        margin-left: 8px; padding: 3px 8px; border-radius: 6px; display: inline-block; white-space: nowrap; 
     }
 
     #error-console { position: absolute; top: 0; left: 0; width: 100%; background: #900; color: white; font-size: 14px; padding: 15px; display: none; z-index: 9999; }
 
-    /* MOBILE & TABLET PORTRAIT */
+    /* === MOBILNÍ & TABLET ZOBRAZENÍ === */
     @media (max-width: 900px) {
-        body { padding: 12px; overflow-y: auto; height: auto; display: block; }
-        header { -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: flex-start; align-items: flex-start; padding: 15px; }
-        .clock { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; }
+        body { 
+            padding: 10px; 
+            overflow: hidden; /* Na mobilu taky chceme aplikaci bez scrollu body */
+            height: 100vh;
+            display: -webkit-flex; display: flex;
+        }
+        
+        header { 
+            -webkit-flex-direction: column; flex-direction: column; 
+            -webkit-align-items: flex-start; align-items: flex-start; 
+            padding: 10px 15px;
+            margin-bottom: 10px;
+        }
+        .clock { position: absolute; top: 10px; right: 15px; font-size: 1.8rem; margin-top: 0; }
         .date-row { -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: flex-start; align-items: flex-start; }
-        .weather-wrap { margin-left: 0; padding-left: 0; border-left: none; margin-top: 10px; height: auto; }
-        .grid { -webkit-flex-direction: column; flex-direction: column; height: auto; display: block; }
-        .panel { margin: 0 0 20px 0; height: 380px; }
+        .weather-wrap { margin-left: 0; padding-left: 0; border-left: none; margin-top: 5px; height: auto; }
+        
+        .grid { 
+            -webkit-flex-direction: column; flex-direction: column; 
+            -webkit-flex: 1; flex: 1;
+            overflow: hidden; /* Aby scrollovaly jen panely */
+            gap: 10px;
+        }
+        
+        .panel { 
+            margin: 0; 
+            -webkit-flex: 1; flex: 1; /* Panely se roztáhnou, aby vyplnily místo */
+            min-height: 0; /* Důležité pro scroll uvnitř flex itemu */
+        }
+        
+        .panel-head { padding: 10px 15px; }
+        .char-img { width: 50px; height: 50px; }
+        .panel-title { font-size: 1.1rem; }
     }
 
     /* TABLET LANDSCAPE */
     @media (max-width: 900px) and (orientation: landscape) {
-        body { overflow: hidden; padding: 16px; height: 100vh; display: -webkit-flex; display: flex; }
+        body { padding: 10px; }
         header { -webkit-flex-direction: row; flex-direction: row; -webkit-align-items: center; align-items: center; }
-        .clock { position: relative; top: auto; right: auto; margin: 0; font-size: 2.8rem; }
+        .clock { position: relative; top: auto; right: auto; margin: 0; font-size: 2.5rem; }
         .date-row { -webkit-flex-direction: row; flex-direction: row; -webkit-align-items: center; align-items: center; }
-        .weather-wrap { margin-left: 20px; padding-left: 20px; border-left: 2px solid rgba(255,255,255,0.2); margin-top: 0; }
-        .grid { display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row; height: 100%; }
-        .panel { -webkit-flex: 1; flex: 1; margin: 0 10px; height: 100%; }
+        .weather-wrap { margin-left: 15px; padding-left: 15px; border-left: 2px solid rgba(255,255,255,0.2); margin-top: 0; }
+        .grid { -webkit-flex-direction: row; flex-direction: row; gap: 10px; }
+        .panel { margin: 0; }
     }
   </style>
 </head>
@@ -269,14 +263,11 @@
 
   <div id="error-console"></div>
   
-  <!-- HUDEBNÍ PŘEHRÁVAČ -->
   <audio id="bg-music"></audio>
 
   <header>
     <div class="header-left">
-      <!-- NOVÝ NADPIS - ID MAIN-TITLE -->
       <h1 id="main-title">NAČÍTÁM...</h1>
-      
       <div class="date-row">
         <div>
             <div id="date-display" class="date-large">...</div>
@@ -294,10 +285,9 @@
   </header>
 
   <div class="grid">
-    <!-- PANEL BUS (NICK WILDE) -->
+    <!-- PANEL BUS -->
     <div class="panel bus">
       <div class="panel-head">
-        <!-- OBRÁZEK NICK + ONCLICK - Pustí nick.mp3 -->
         <img src="nick.jpg" class="char-img" alt="Nick" onclick="toggleMusic(this, 'nick.mp3')">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#E07C24">Nickovy Spoje</span>
@@ -310,10 +300,10 @@
       </div>
     </div>
 
-    <!-- PANEL METRO (JUDY HOPPS) -->
+    <!-- PANEL METRO -->
     <div class="panel metro">
       <div class="panel-head">
-        <!-- OBRÁZEK JUDY + ONCLICK - Pustí judy.mp3 -->
+        <!-- ZMĚNA: Použití judy.jpg -->
         <img src="judy.jpg" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3')">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#2DF4FF">Judy Expres</span>
@@ -328,54 +318,40 @@
   </div>
 
   <script>
-    // --- JS LOGIKA (ES5 pro staré tablety) ---
-
+    // --- JS LOGIKA (ES5) ---
     window.onerror = function(msg, url, line) {
        var el = document.getElementById('error-console');
        if(el) { el.style.display = 'block'; el.innerText = "Error: " + msg + " (" + line + ")"; }
        return false;
     };
 
-    // Globální proměnná pro sledování aktuálně hrajícího obrázku
     var currentPlayingImg = null;
 
-    // UPRAVENÁ FUNKCE PRO HUDBU - PŘIJÍMÁ SOUBOR
     function toggleMusic(imgElement, songFile) {
         var audio = document.getElementById('bg-music');
-        
-        // Zjistíme, zda už hraje tato konkrétní písnička (podle atributu data-song)
         var isSameSong = audio.getAttribute('data-song') === songFile;
 
         if (!audio.paused && isSameSong) {
-            // Pokud hraje a klikli jsme na stejnou -> PAUZA
             audio.pause();
             imgElement.classList.remove('playing');
             currentPlayingImg = null;
         } else {
-            // Pokud hraje něco jiného nebo je pauza
             if (!isSameSong) {
-                // Změna zdroje
                 audio.src = songFile;
                 audio.setAttribute('data-song', songFile);
             }
-            
             var playPromise = audio.play();
-            
-            // UI Update: Vypnout animaci u předchozího obrázku
             if (currentPlayingImg && currentPlayingImg !== imgElement) {
                 currentPlayingImg.classList.remove('playing');
             }
-            
             if (playPromise !== undefined) {
                 playPromise.then(function() {
-                    // Přehrávání začalo
                     imgElement.classList.add('playing');
                     currentPlayingImg = imgElement;
                 }).catch(function(error) {
-                    alert("Chyba: Soubor '" + songFile + "' nebyl nalezen ve složce.\n" + error);
+                    alert("Chyba: Soubor '" + songFile + "' nebyl nalezen.\n" + error);
                 });
             } else {
-                // Fallback pro staré prohlížeče
                 imgElement.classList.add('playing');
                 currentPlayingImg = imgElement;
             }
@@ -474,7 +450,8 @@
                 });
             }
             items.sort(function(a, b) { return a.ts - b.ts; });
-            items = items.slice(0, 7);
+            // ZMĚNA: Zvýšil jsem limit zobrazených spojů na 15, aby bylo možné scrollovat
+            items = items.slice(0, 15);
 
             var html = "";
             if (items.length === 0) html = '<tr><td colspan="3" style="text-align:center; padding:20px; color:#aaa">Zootropolis spí...</td></tr>';
@@ -531,7 +508,7 @@
             var targetTs = parseInt(row.getAttribute('data-ts'));
             var diffSec = Math.floor((targetTs - now) / 1000);
             var valEl = row.querySelector('.val');
-            var unitEl = row.querySelector('.unit');
+            var unitEl = row.querySelector('.unit'); 
             
             valEl.style.color = "#fff";
             
