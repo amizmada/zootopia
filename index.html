@@ -54,6 +54,35 @@
         -webkit-flex-direction: column; flex-direction: column;
     }
 
+    /* === EASTER EGG STYLY (BLESK) === */
+    #blesk-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9);
+        z-index: 99999;
+        display: none; /* Skryto */
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
+        -webkit-flex-direction: column; flex-direction: column;
+        opacity: 0;
+        -webkit-transition: opacity 3s ease-in-out; /* Velmi pomalý přechod */
+        transition: opacity 3s ease-in-out;
+        cursor: pointer;
+    }
+    
+    #blesk-img {
+        max-width: 80%;
+        max-height: 60%;
+        border-radius: 20px;
+        box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+        border: 2px solid #fff;
+    }
+    
+    #blesk-text {
+        font-size: 3rem; font-weight: 900; color: #fff;
+        margin-top: 30px; text-align: center;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+
     /* HEADER */
     header { 
         display: -webkit-flex; display: flex; 
@@ -104,7 +133,10 @@
         font-size: 4rem; font-weight: 900; color: #fff; 
         text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
         letter-spacing: -1px;
+        cursor: pointer; /* Aby bylo jasné, že se dá kliknout */
     }
+    
+    .clock:active { transform: scale(0.95); opacity: 0.8; }
 
     /* GRID */
     .grid { 
@@ -125,6 +157,8 @@
         border: 2px solid var(--border-color);
         box-shadow: none;
         position: relative;
+        -webkit-backface-visibility: hidden; backface-visibility: hidden;
+        -webkit-transform: translate3d(0,0,0); transform: translate3d(0,0,0);
     }
 
     .panel.bus { border-top: 6px solid var(--nick-orange); }
@@ -152,10 +186,14 @@
         object-position: center top; 
         cursor: pointer;
         transition: transform 0.1s, border-color 0.3s;
+        -webkit-transform: translateZ(0); transform: translateZ(0);
+        will-change: box-shadow, transform;
     }
     
-    .char-img:active { transform: scale(0.9); border-color: #fff !important; }
+    .char-img:active { transform: scale(0.9) translateZ(0); border-color: #fff !important; }
+    
     .playing { animation: pulse-border 2s infinite; }
+    
     @keyframes pulse-border {
         0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
         70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
@@ -207,104 +245,51 @@
 
     #error-console { position: absolute; top: 0; left: 0; width: 100%; background: #900; color: white; font-size: 14px; padding: 15px; display: none; z-index: 9999; }
 
-    /* === MOBILNÍ & TABLET ZOBRAZENÍ (Portrait) === */
     @media (max-width: 900px) {
-        body { 
-            padding: 10px; 
-            /* Povolíme scroll celého body, kdyby se to nevešlo */
-            overflow-y: auto; 
-            height: auto; 
-            display: block; 
-        }
-        
-        header { 
-            display: block; /* Blokové zobrazení pro absolutní pozicování hodin */
-            position: relative;
-            padding: 10px 15px;
-            margin-bottom: 10px;
-        }
-
-        /* Den v týdnu - Vlevo nahoře */
+        body { padding: 10px; overflow-y: auto; height: auto; display: block; }
+        header { -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: flex-start; align-items: flex-start; padding: 10px 15px; margin-bottom: 10px; }
         .header-left { display: block; }
-        h1 { 
-            font-size: 1rem; margin: 0; 
-            display: inline-block; 
-        }
-
-        /* Hodiny - Absolutně vpravo nahoře */
-        .clock { 
-            position: absolute; top: 8px; right: 15px; 
-            font-size: 1.8rem; margin: 0;
-            line-height: 1;
-        }
-
-        /* Řádek s Datem a Počasím */
-        .date-row { 
-            display: -webkit-flex; display: flex;
-            -webkit-align-items: center; align-items: center;
-            margin-top: 5px;
-        }
-
-        .date-large { 
-            font-size: 1.4rem; 
-            margin-right: 15px; 
-        }
-        
-        .weather-wrap { 
-            margin: 0; padding: 0; 
-            border: none; height: auto;
-            padding-left: 0; /* Zrušit padding z desktopu */
-        }
-
+        h1 { font-size: 1rem; margin: 0; display: inline-block; }
+        .clock { position: absolute; top: 8px; right: 15px; font-size: 1.8rem; margin: 0; line-height: 1; }
+        .date-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; margin-top: 5px; }
+        .date-large { font-size: 1.4rem; margin-right: 15px; }
+        .weather-wrap { margin: 0; padding: 0; border: none; height: auto; padding-left: 0; }
         .weather-icon { width: 32px; height: 32px; margin-right: 8px; }
         .weather-temp { font-size: 1.4rem; }
-        .weather-desc { display: none; } /* Na mobilu skryjeme popis */
-        
-        /* Grid pod sebe */
-        .grid { 
-            display: block; 
-            height: auto; 
-            overflow: visible;
-        }
-        
-        .panel { 
-            margin: 0 0 15px 0; 
-            height: auto; 
-            min-height: 350px; /* Aby se dalo scrollovat uvnitř */
-        }
-        
+        .weather-desc { display: none; }
+        .grid { display: block; height: auto; overflow: visible; }
+        .panel { margin: 0 0 15px 0; height: auto; min-height: 350px; }
         .panel-head { padding: 10px 15px; }
         .char-img { width: 50px; height: 50px; }
         .panel-title { font-size: 1.1rem; }
-        
-        /* Zmenšení písma v tabulce pro mobil */
         .td-dest { font-size: 1.1rem; }
         .val { font-size: 1.5rem; }
     }
 
-    /* TABLET LANDSCAPE (Zůstává 2 sloupce) */
     @media (max-width: 900px) and (orientation: landscape) {
         body { overflow: hidden; padding: 10px; height: 100vh; display: -webkit-flex; display: flex; }
         header { display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row; -webkit-justify-content: space-between; justify-content: space-between; -webkit-align-items: center; align-items: center; }
-        
         .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
         h1 { display: block; font-size: 1rem; }
-        
-        .clock { position: relative; top: auto; right: auto; margin: 0; font-size: 2.5rem; }
+        .clock { position: relative; top: auto; right: auto; margin: 0; font-size: 2.8rem; }
         .date-row { margin-top: 0; }
         .date-large { font-size: 1.8rem; }
-        
         .weather-wrap { padding-left: 20px; border-left: 2px solid rgba(255,255,255,0.2); }
         .weather-icon { width: 48px; height: 48px; }
         .weather-temp { font-size: 1.8rem; }
         .weather-desc { display: block; font-size: 0.8rem; }
-
         .grid { display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row; gap: 10px; height: 100%; }
         .panel { -webkit-flex: 1; flex: 1; margin: 0; height: 100%; }
     }
   </style>
 </head>
 <body>
+
+  <!-- EASTER EGG OVERLAY -->
+  <div id="blesk-overlay" onclick="hideEasterEgg()">
+      <img src="blesk.jpg" id="blesk-img" alt="Blesk">
+      <h1 id="blesk-text">Haa... ... ... Haa...</h1>
+  </div>
 
   <div id="error-console"></div>
   
@@ -326,15 +311,15 @@
         </div>
       </div>
     </div>
-    <div id="clock" class="clock">--:--</div>
+    <!-- KLIKNUTÍ NA HODINY SPUSTÍ EASTER EGG -->
+    <div id="clock" class="clock" onclick="triggerEasterEgg()">--:--</div>
   </header>
 
   <div class="grid">
     <!-- PANEL BUS -->
     <div class="panel bus">
       <div class="panel-head">
-        <!-- ZMĚNA: Přidán parametr volume (2.0 = 200%) -->
-        <img src="nick.jpg" class="char-img" alt="Nick" onclick="toggleMusic(this, 'nick.mp3', 3.0)">
+        <img src="nick.jpg" class="char-img" alt="Nick" onclick="toggleMusic(this, 'nick.mp3', 2.0)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#E07C24">Nickovy Spoje</span>
             <div style="font-size:0.8rem; color:#ddd; font-weight:bold; opacity:0.8">LITOCHLEBSKÉ NÁMĚSTÍ</div>
@@ -349,8 +334,7 @@
     <!-- PANEL METRO -->
     <div class="panel metro">
       <div class="panel-head">
-        <!-- ZMĚNA: Přidán parametr volume (0.4 = 40%) -->
-        <img src="judy.jpg" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3', 1.0)">
+        <img src="image_e05d6b.png" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3', 0.4)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#2DF4FF">Judy Expres</span>
             <div style="font-size:0.8rem; color:#ddd; font-weight:bold; opacity:0.8">METRO C – OPATOV</div>
@@ -371,10 +355,27 @@
        return false;
     };
 
+    // --- EASTER EGG FUNKCE ---
+    function triggerEasterEgg() {
+        var overlay = document.getElementById('blesk-overlay');
+        overlay.style.display = '-webkit-flex';
+        overlay.style.display = 'flex';
+        // Vynutit překreslení pro animaci
+        void overlay.offsetWidth;
+        overlay.style.opacity = '1';
+    }
+
+    function hideEasterEgg() {
+        var overlay = document.getElementById('blesk-overlay');
+        overlay.style.opacity = '0';
+        setTimeout(function() {
+            overlay.style.display = 'none';
+        }, 3000); // 3 sekundy fade out (pomalý jako lenochod)
+    }
+
     var currentPlayingImg = null;
     var audioCtx, source, gainNode;
 
-    // Inicializace Web Audio API pro zesílení (Boost)
     function initAudioBoost(audioElement) {
         if (!audioCtx) {
             try {
@@ -396,13 +397,9 @@
         return gainNode;
     }
 
-    // ZMĚNA: Přidán parametr volume a logika zesílení
     function toggleMusic(imgElement, songFile, volume) {
         var audio = document.getElementById('bg-music');
-        
-        // Zkusíme inicializovat zesilovač
         var boostNode = initAudioBoost(audio);
-
         var isSameSong = audio.getAttribute('data-song') === songFile;
 
         if (!audio.paused && isSameSong) {
@@ -410,15 +407,11 @@
             imgElement.classList.remove('playing');
             currentPlayingImg = null;
         } else {
-            // Nastavíme hlasitost
             var vol = (volume !== undefined) ? volume : 1.0;
-
             if (boostNode) {
-                // Pokud máme zesilovač, nastavíme gain (může být > 1.0)
                 audio.volume = 1.0; 
                 boostNode.gain.value = vol;
             } else {
-                // Fallback: maximálně 1.0
                 audio.volume = (vol > 1.0) ? 1.0 : vol;
             }
 
