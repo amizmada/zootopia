@@ -4,22 +4,28 @@
   <meta charset="UTF-8" />
   <title>Zootropolis Hub</title>
   
+  <!-- META TAGY PRO FULLSCREEN (KIOSK) -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#2c1e4a">
 
+  <!-- IKONY -->
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
+  
   <link rel="manifest" href="manifest.json">
   <meta http-equiv="refresh" content="10800">
 
+  <!-- FONT NUNITO -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
+    /* === ZOOTOPIA STYLY === */
     :root {
+      /* Barvy */
       --judy-blue: #2DF4FF;
       --judy-light: #047beb;
       --judy-accent: #2DF4FF; 
@@ -31,18 +37,31 @@
       --text-main: #FFFFFF;
       --text-sec: #dcdcdc; 
       
-      --panel-bg: rgba(20, 10, 35, 0.85); 
+      --panel-bg: rgba(20, 10, 35, 0.75); 
       --border-color: rgba(255, 255, 255, 0.15);
       
       --status-warn: #FFD700;
       --status-alert: #FF453A;
     }
 
-    * { box-sizing: border-box; }
+    * { 
+        box-sizing: border-box; 
+        
+        /* ZMĚNA: Zákaz označování textu a zvýrazňování při kliknutí */
+        -webkit-user-select: none; /* Chrome/Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+ */
+        user-select: none; /* Standard */
+        
+        -webkit-tap-highlight-color: transparent; /* Zruší modré bliknutí na Androidu */
+        outline: none; /* Zruší rámeček při fokusu */
+    }
 
     body { 
         background-color: #2a1b52; 
-        background-image: url('back.jpg'); 
+        /* Pozadí města */
+        background-image: 
+            url('back.jpg'); 
         background-size: cover;
         background-position: center bottom;
         
@@ -75,6 +94,7 @@
         border-radius: 20px;
         box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
         border: 2px solid #fff;
+        pointer-events: none; /* Aby nešlo označiť obrázek */
     }
     
     #blesk-text {
@@ -106,6 +126,7 @@
         -webkit-text-fill-color: transparent;
         margin-bottom: 5px;
         text-shadow: 0 0 20px rgba(255,255,255,0.1);
+        pointer-events: none;
     }
     
     .date-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
@@ -114,18 +135,20 @@
         font-size: 2.2rem; font-weight: 800; 
         color: #fff; white-space: nowrap; margin-right: 30px; 
         text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        pointer-events: none;
     }
     
+    /* POČASÍ */
     .weather-wrap { 
         display: -webkit-flex; display: flex; 
         -webkit-align-items: center; align-items: center; 
         padding-left: 30px; border-left: 2px solid rgba(255,255,255,0.2); 
         opacity: 0; -webkit-transition: opacity 1s; transition: opacity 1s; 
     }
-    .weather-icon { width: 56px; height: 56px; margin-right: 15px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+    .weather-icon { width: 56px; height: 56px; margin-right: 15px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); pointer-events: none; }
     .weather-icon svg { width: 100%; height: 100%; }
     
-    .weather-text { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
+    .weather-text { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; pointer-events: none; }
     .weather-temp { font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
     .weather-desc { color: #eee; font-size: 1rem; text-transform: lowercase; font-weight: 600; margin-top: 4px; }
     
@@ -133,7 +156,7 @@
         font-size: 4rem; font-weight: 900; color: #fff; 
         text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
         letter-spacing: -1px;
-        cursor: pointer; /* Aby bylo jasné, že se dá kliknout */
+        cursor: pointer; 
     }
     
     .clock:active { transform: scale(0.95); opacity: 0.8; }
@@ -203,7 +226,7 @@
     .bus .char-img { border-color: var(--nick-orange); }
     .metro .char-img { border-color: var(--judy-accent); }
 
-    .panel-title { font-weight: 800; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+    .panel-title { font-weight: 800; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); pointer-events: none; }
     
     .list-container { 
         -webkit-flex: 1; flex: 1; 
@@ -334,7 +357,7 @@
     <!-- PANEL METRO -->
     <div class="panel metro">
       <div class="panel-head">
-        <img src="judy.jpg" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3', 0.4)">
+        <img src="judy.jpg" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3', 1.0)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#2DF4FF">Judy Expres</span>
             <div style="font-size:0.8rem; color:#ddd; font-weight:bold; opacity:0.8">METRO C – OPATOV</div>
@@ -360,7 +383,6 @@
         var overlay = document.getElementById('blesk-overlay');
         overlay.style.display = '-webkit-flex';
         overlay.style.display = 'flex';
-        // Vynutit překreslení pro animaci
         void overlay.offsetWidth;
         overlay.style.opacity = '1';
     }
@@ -370,7 +392,7 @@
         overlay.style.opacity = '0';
         setTimeout(function() {
             overlay.style.display = 'none';
-        }, 3000); // 3 sekundy fade out (pomalý jako lenochod)
+        }, 3000); 
     }
 
     var currentPlayingImg = null;
@@ -529,7 +551,6 @@
                 });
             }
             items.sort(function(a, b) { return a.ts - b.ts; });
-            // ZMĚNA: Limit pro scroll
             items = items.slice(0, 15);
 
             var html = "";
