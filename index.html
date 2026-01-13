@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Zootropolis Hub</title>
   
+  <!-- META TAGY PRO FULLSCREEN (KIOSK) -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,10 +13,11 @@
   <!-- IKONY -->
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
-  <link rel="manifest" href="manifest.json">
   
+  <link rel="manifest" href="manifest.json">
   <meta http-equiv="refresh" content="10800">
 
+  <!-- FONT NUNITO -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -35,7 +37,7 @@
       --text-main: #FFFFFF;
       --text-sec: #dcdcdc; 
       
-      --panel-bg: rgba(20, 10, 35, 0.85); 
+      --panel-bg: rgba(20, 10, 35, 0.75); 
       --border-color: rgba(255, 255, 255, 0.15);
       
       --status-warn: #FFD700;
@@ -44,18 +46,24 @@
 
     * { 
         box-sizing: border-box; 
-        /* Zákaz označování textu */
-        -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; 
-        -webkit-tap-highlight-color: transparent; outline: none; 
+        
+        /* ZMĚNA: Zákaz označování textu a zvýrazňování při kliknutí */
+        -webkit-user-select: none; /* Chrome/Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+ */
+        user-select: none; /* Standard */
+        
+        -webkit-tap-highlight-color: transparent; /* Zruší modré bliknutí na Androidu */
+        outline: none; /* Zruší rámeček při fokusu */
     }
 
     body { 
         background-color: #2a1b52; 
-        /* Pozadí */
-        background-image: url('back.jpg'); 
+        /* Pozadí města */
+        background-image: 
+            url('back.jpg'); 
         background-size: cover;
         background-position: center bottom;
-        background-attachment: fixed;
         
         color: var(--text-main); 
         font-family: 'Nunito', sans-serif;
@@ -63,6 +71,36 @@
         height: 100vh; overflow: hidden; 
         display: -webkit-flex; display: flex; 
         -webkit-flex-direction: column; flex-direction: column;
+    }
+
+    /* === EASTER EGG STYLY (BLESK) === */
+    #blesk-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9);
+        z-index: 99999;
+        display: none; /* Skryto */
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
+        -webkit-flex-direction: column; flex-direction: column;
+        opacity: 0;
+        -webkit-transition: opacity 3s ease-in-out; /* Velmi pomalý přechod */
+        transition: opacity 3s ease-in-out;
+        cursor: pointer;
+    }
+    
+    #blesk-img {
+        max-width: 80%;
+        max-height: 60%;
+        border-radius: 20px;
+        box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+        border: 2px solid #fff;
+        pointer-events: none; /* Aby nešlo označiť obrázek */
+    }
+    
+    #blesk-text {
+        font-size: 3rem; font-weight: 900; color: #fff;
+        margin-top: 30px; text-align: center;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     }
 
     /* HEADER */
@@ -80,7 +118,6 @@
     
     .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
     
-    /* NADPIS - DEN V TÝDNU */
     h1 { 
         margin: 0; font-size: 1.4rem; font-weight: 900; 
         text-transform: uppercase; letter-spacing: 2px; 
@@ -89,6 +126,7 @@
         -webkit-text-fill-color: transparent;
         margin-bottom: 5px;
         text-shadow: 0 0 20px rgba(255,255,255,0.1);
+        pointer-events: none;
     }
     
     .date-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
@@ -97,6 +135,7 @@
         font-size: 2.2rem; font-weight: 800; 
         color: #fff; white-space: nowrap; margin-right: 30px; 
         text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        pointer-events: none;
     }
     
     /* POČASÍ */
@@ -106,10 +145,10 @@
         padding-left: 30px; border-left: 2px solid rgba(255,255,255,0.2); 
         opacity: 0; -webkit-transition: opacity 1s; transition: opacity 1s; 
     }
-    .weather-icon { width: 56px; height: 56px; margin-right: 15px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+    .weather-icon { width: 56px; height: 56px; margin-right: 15px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); pointer-events: none; }
     .weather-icon svg { width: 100%; height: 100%; }
     
-    .weather-text { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
+    .weather-text { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; pointer-events: none; }
     .weather-temp { font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
     .weather-desc { color: #eee; font-size: 1rem; text-transform: lowercase; font-weight: 600; margin-top: 4px; }
     
@@ -117,7 +156,10 @@
         font-size: 4rem; font-weight: 900; color: #fff; 
         text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
         letter-spacing: -1px;
+        cursor: pointer; 
     }
+    
+    .clock:active { transform: scale(0.95); opacity: 0.8; }
 
     /* GRID */
     .grid { 
@@ -138,7 +180,6 @@
         border: 2px solid var(--border-color);
         box-shadow: none;
         position: relative;
-        /* Fix pro blikání na starých Android */
         -webkit-backface-visibility: hidden; backface-visibility: hidden;
         -webkit-transform: translate3d(0,0,0); transform: translate3d(0,0,0);
     }
@@ -158,7 +199,6 @@
         -webkit-flex: 0 0 auto; flex: 0 0 auto; 
     }
     
-    /* OBRÁZKY POSTAV */
     .char-img { 
         width: 70px; height: 70px; margin-right: 15px; 
         border-radius: 50%; 
@@ -169,7 +209,6 @@
         object-position: center top; 
         cursor: pointer;
         transition: transform 0.1s, border-color 0.3s;
-        /* Fix pro blikání */
         -webkit-transform: translateZ(0); transform: translateZ(0);
         will-change: box-shadow, transform;
     }
@@ -177,6 +216,7 @@
     .char-img:active { transform: scale(0.9) translateZ(0); border-color: #fff !important; }
     
     .playing { animation: pulse-border 2s infinite; }
+    
     @keyframes pulse-border {
         0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
         70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
@@ -208,13 +248,7 @@
     .bus .badge { background: var(--nick-green); color: #fff; border: 1px solid rgba(255,255,255,0.2); } 
     .metro .badge { background: var(--judy-light); color: #fff; border: 1px solid rgba(255,255,255,0.2); } 
     
-    .td-dest { 
-        font-size: 1.3rem; font-weight: 700; color: #fff; 
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.5); 
-        text-align: left; /* Zarovnání vlevo */
-        padding-left: 10px;
-    }
-    
+    .td-dest { font-size: 1.3rem; font-weight: 700; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
     .td-time { text-align: right; width: 180px; }
     
     .countdown-wrap { display: -webkit-flex; display: flex; -webkit-justify-content: flex-end; justify-content: flex-end; -webkit-align-items: baseline; align-items: baseline; margin-bottom: 2px; }
@@ -234,7 +268,6 @@
 
     #error-console { position: absolute; top: 0; left: 0; width: 100%; background: #900; color: white; font-size: 14px; padding: 15px; display: none; z-index: 9999; }
 
-    /* === MOBILNÍ & TABLET ZOBRAZENÍ === */
     @media (max-width: 900px) {
         body { padding: 10px; overflow-y: auto; height: auto; display: block; }
         header { -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: flex-start; align-items: flex-start; padding: 10px 15px; margin-bottom: 10px; }
@@ -247,18 +280,15 @@
         .weather-icon { width: 32px; height: 32px; margin-right: 8px; }
         .weather-temp { font-size: 1.4rem; }
         .weather-desc { display: none; }
-        
         .grid { display: block; height: auto; overflow: visible; }
         .panel { margin: 0 0 15px 0; height: auto; min-height: 350px; }
-        
-        /* Úprava tabulky na mobilu */
-        .td-dest { font-size: 1.1rem; }
-        .val { font-size: 1.5rem; }
+        .panel-head { padding: 10px 15px; }
         .char-img { width: 50px; height: 50px; }
         .panel-title { font-size: 1.1rem; }
+        .td-dest { font-size: 1.1rem; }
+        .val { font-size: 1.5rem; }
     }
 
-    /* TABLET LANDSCAPE */
     @media (max-width: 900px) and (orientation: landscape) {
         body { overflow: hidden; padding: 10px; height: 100vh; display: -webkit-flex; display: flex; }
         header { display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row; -webkit-justify-content: space-between; justify-content: space-between; -webkit-align-items: center; align-items: center; }
@@ -267,7 +297,7 @@
         .clock { position: relative; top: auto; right: auto; margin: 0; font-size: 2.8rem; }
         .date-row { margin-top: 0; }
         .date-large { font-size: 1.8rem; }
-        .weather-wrap { padding-left: 20px; border-left: 2px solid rgba(255,255,255,0.2); margin-top: 0; height: auto; }
+        .weather-wrap { padding-left: 20px; border-left: 2px solid rgba(255,255,255,0.2); }
         .weather-icon { width: 48px; height: 48px; }
         .weather-temp { font-size: 1.8rem; }
         .weather-desc { display: block; font-size: 0.8rem; }
@@ -277,6 +307,12 @@
   </style>
 </head>
 <body>
+
+  <!-- EASTER EGG OVERLAY -->
+  <div id="blesk-overlay" onclick="hideEasterEgg()">
+      <img src="blesk.jpg" id="blesk-img" alt="Blesk">
+      <h1 id="blesk-text">Haa... ... ... Haa...</h1>
+  </div>
 
   <div id="error-console"></div>
   
@@ -298,7 +334,8 @@
         </div>
       </div>
     </div>
-    <div id="clock" class="clock">--:--</div>
+    <!-- KLIKNUTÍ NA HODINY SPUSTÍ EASTER EGG -->
+    <div id="clock" class="clock" onclick="triggerEasterEgg()">--:--</div>
   </header>
 
   <div class="grid">
@@ -320,7 +357,7 @@
     <!-- PANEL METRO -->
     <div class="panel metro">
       <div class="panel-head">
-        <img src="judy.jpg" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3', 0.4)">
+        <img src="image_e05d6b.png" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3', 0.4)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#2DF4FF">Judy Expres</span>
             <div style="font-size:0.8rem; color:#ddd; font-weight:bold; opacity:0.8">METRO C – OPATOV</div>
@@ -340,6 +377,23 @@
        if(el) { el.style.display = 'block'; el.innerText = "Error: " + msg + " (" + line + ")"; }
        return false;
     };
+
+    // --- EASTER EGG FUNKCE ---
+    function triggerEasterEgg() {
+        var overlay = document.getElementById('blesk-overlay');
+        overlay.style.display = '-webkit-flex';
+        overlay.style.display = 'flex';
+        void overlay.offsetWidth;
+        overlay.style.opacity = '1';
+    }
+
+    function hideEasterEgg() {
+        var overlay = document.getElementById('blesk-overlay');
+        overlay.style.opacity = '0';
+        setTimeout(function() {
+            overlay.style.display = 'none';
+        }, 3000); 
+    }
 
     var currentPlayingImg = null;
     var audioCtx, source, gainNode;
