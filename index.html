@@ -4,20 +4,16 @@
   <meta charset="UTF-8" />
   <title>Zootropolis Hub</title>
   
-  <!-- META TAGY PRO FULLSCREEN (KIOSK) -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#2c1e4a">
 
-  <!-- IKONY -->
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
-  
   <link rel="manifest" href="manifest.json">
   <meta http-equiv="refresh" content="10800">
 
-  <!-- FONT NUNITO -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -25,7 +21,6 @@
   <style>
     /* === ZOOTOPIA STYLY === */
     :root {
-      /* Barvy */
       --judy-blue: #2DF4FF;
       --judy-light: #047beb;
       --judy-accent: #2DF4FF; 
@@ -37,33 +32,21 @@
       --text-main: #FFFFFF;
       --text-sec: #dcdcdc; 
       
-      --panel-bg: rgba(20, 10, 35, 0.75); 
+      --panel-bg: rgba(20, 10, 35, 0.85); 
       --border-color: rgba(255, 255, 255, 0.15);
       
       --status-warn: #FFD700;
       --status-alert: #FF453A;
     }
 
-    * { 
-        box-sizing: border-box; 
-        
-        /* Zákaz označování textu a zvýrazňování při kliknutí */
-        -webkit-user-select: none; /* Chrome/Safari */
-        -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* IE10+ */
-        user-select: none; /* Standard */
-        
-        -webkit-tap-highlight-color: transparent; /* Zruší modré bliknutí na Androidu */
-        outline: none; /* Zruší rámeček při fokusu */
-    }
+    * { box-sizing: border-box; }
 
     body { 
         background-color: #2a1b52; 
-        /* Pozadí města */
-        background-image: 
-            url('back.jpg'); 
+        background-image: url('back.jpg'); 
         background-size: cover;
         background-position: center bottom;
+        background-attachment: fixed;
         
         color: var(--text-main); 
         font-family: 'Nunito', sans-serif;
@@ -73,34 +56,52 @@
         -webkit-flex-direction: column; flex-direction: column;
     }
 
-    /* === EASTER EGG STYLY (BLESK) === */
-    #blesk-overlay {
+    /* === SCREENSAVER (Místo Bleska) === */
+    #screensaver {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.9);
+        background-color: #000;
+        /* ZDE SE NAČTE VÁŠ OBRÁZEK saver.jpg */
+        background-image: url('saver.jpg'); 
+        background-size: cover;
+        background-position: center;
         z-index: 99999;
         display: none; /* Skryto */
         -webkit-align-items: center; align-items: center;
         -webkit-justify-content: center; justify-content: center;
-        -webkit-flex-direction: column; flex-direction: column;
-        opacity: 0;
-        -webkit-transition: opacity 3s ease-in-out; /* Velmi pomalý přechod */
-        transition: opacity 3s ease-in-out;
         cursor: pointer;
     }
-    
-    #blesk-img {
-        max-width: 80%;
-        max-height: 60%;
-        border-radius: 20px;
-        box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
-        border: 2px solid #fff;
-        pointer-events: none; /* Aby nešlo označit obrázek */
+
+    /* Kontejner pro obsah spořiče */
+    #saver-box {
+        text-align: center;
+        background: transparent;
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
+        -webkit-align-items: center; align-items: center;
+        margin-left: 60px; 
+    }
+
+    #saver-clock {
+        font-size: 7rem; /* Velké hodiny */
+        font-weight: 900;
+        color: #fff;
+        /* Silný stín pro čitelnost na světlém pozadí */
+        text-shadow: 0 5px 10px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.5);
+        line-height: 0.9;
+        font-variant-numeric: tabular-nums;
+        margin-bottom: 10px;
     }
     
-    #blesk-text {
-        font-size: 3rem; font-weight: 900; color: #fff;
-        margin-top: 30px; text-align: center;
-        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    #saver-info {
+        font-size: 2rem; /* Datum a počasí */
+        font-weight: 800;
+        color: #fff;
+        text-shadow: 0 3px 6px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.6);
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
     /* HEADER */
@@ -126,7 +127,6 @@
         -webkit-text-fill-color: transparent;
         margin-bottom: 5px;
         text-shadow: 0 0 20px rgba(255,255,255,0.1);
-        pointer-events: none;
     }
     
     .date-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
@@ -135,20 +135,18 @@
         font-size: 2.2rem; font-weight: 800; 
         color: #fff; white-space: nowrap; margin-right: 30px; 
         text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        pointer-events: none;
     }
     
-    /* POČASÍ */
     .weather-wrap { 
         display: -webkit-flex; display: flex; 
         -webkit-align-items: center; align-items: center; 
         padding-left: 30px; border-left: 2px solid rgba(255,255,255,0.2); 
         opacity: 0; -webkit-transition: opacity 1s; transition: opacity 1s; 
     }
-    .weather-icon { width: 56px; height: 56px; margin-right: 15px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); pointer-events: none; }
+    .weather-icon { width: 56px; height: 56px; margin-right: 15px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
     .weather-icon svg { width: 100%; height: 100%; }
     
-    .weather-text { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; pointer-events: none; }
+    .weather-text { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
     .weather-temp { font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
     .weather-desc { color: #eee; font-size: 1rem; text-transform: lowercase; font-weight: 600; margin-top: 4px; }
     
@@ -158,7 +156,6 @@
         letter-spacing: -1px;
         cursor: pointer; 
     }
-    
     .clock:active { transform: scale(0.95); opacity: 0.8; }
 
     /* GRID */
@@ -199,7 +196,6 @@
         -webkit-flex: 0 0 auto; flex: 0 0 auto; 
     }
     
-    /* OBRÁZKY POSTAV - INTERAKTIVNÍ */
     .char-img { 
         width: 70px; height: 70px; margin-right: 15px; 
         border-radius: 50%; 
@@ -249,7 +245,7 @@
     .bus .badge { background: var(--nick-green); color: #fff; border: 1px solid rgba(255,255,255,0.2); } 
     .metro .badge { background: var(--judy-light); color: #fff; border: 1px solid rgba(255,255,255,0.2); } 
     
-    .td-dest { font-size: 1.3rem; font-weight: 700; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+    .td-dest { font-size: 1.3rem; font-weight: 700; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); text-align: left; padding-left: 10px; }
     .td-time { text-align: right; width: 180px; }
     
     .countdown-wrap { display: -webkit-flex; display: flex; -webkit-justify-content: flex-end; justify-content: flex-end; -webkit-align-items: baseline; align-items: baseline; margin-bottom: 2px; }
@@ -309,10 +305,12 @@
 </head>
 <body>
 
-  <!-- EASTER EGG OVERLAY -->
-  <div id="blesk-overlay" onclick="hideEasterEgg()">
-      <img src="blesk.jpg" id="blesk-img" alt="Blesk">
-      <h1 id="blesk-text">Haa... ... ... Haa...</h1>
+  <!-- SCREENSAVER OVERLAY -->
+  <div id="screensaver" onclick="hideScreensaver()">
+      <div id="saver-box">
+          <div id="saver-clock">--:--</div>
+          <div id="saver-info">--. --. ---- | --°</div>
+      </div>
   </div>
 
   <div id="error-console"></div>
@@ -335,15 +333,14 @@
         </div>
       </div>
     </div>
-    <!-- KLIKNUTÍ NA HODINY SPUSTÍ EASTER EGG -->
-    <div id="clock" class="clock" onclick="triggerEasterEgg()">--:--</div>
+    <!-- KLIKNUTÍ NA HODINY SPUSTÍ SCREENSAVER -->
+    <div id="clock" class="clock" onclick="showScreensaver()">--:--</div>
   </header>
 
   <div class="grid">
     <!-- PANEL BUS -->
     <div class="panel bus">
       <div class="panel-head">
-        <!-- OBRÁZEK NICK + ONCLICK (Volume 2.0 = 200%) -->
         <img src="nick.jpg" class="char-img" alt="Nick" onclick="toggleMusic(this, 'nick.mp3', 2.0)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#E07C24">Nickovy Spoje</span>
@@ -359,7 +356,6 @@
     <!-- PANEL METRO -->
     <div class="panel metro">
       <div class="panel-head">
-        <!-- OBRÁZEK JUDY (image_e05d6b.png) + ONCLICK (Volume 0.4 = 40%) -->
         <img src="judy.jpg" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3', 0.4)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:#2DF4FF">Judy Expres</span>
@@ -381,21 +377,16 @@
        return false;
     };
 
-    // --- EASTER EGG FUNKCE ---
-    function triggerEasterEgg() {
-        var overlay = document.getElementById('blesk-overlay');
+    // --- SCREENSAVER FUNKCE ---
+    function showScreensaver() {
+        var overlay = document.getElementById('screensaver');
         overlay.style.display = '-webkit-flex';
         overlay.style.display = 'flex';
-        void overlay.offsetWidth;
-        overlay.style.opacity = '1';
+        tick(); // Aktualizovat čas hned
     }
 
-    function hideEasterEgg() {
-        var overlay = document.getElementById('blesk-overlay');
-        overlay.style.opacity = '0';
-        setTimeout(function() {
-            overlay.style.display = 'none';
-        }, 3000); 
+    function hideScreensaver() {
+        document.getElementById('screensaver').style.display = 'none';
     }
 
     var currentPlayingImg = null;
@@ -638,7 +629,22 @@
 
     function tick() {
       var now = new Date();
-      document.getElementById('clock').innerText = now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute:'2-digit', second: '2-digit' });
+      var timeStr = now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute:'2-digit', second: '2-digit' });
+      document.getElementById('clock').innerText = timeStr;
+      
+      // Update Saver Clock if visible
+      var saverClock = document.getElementById('saver-clock');
+      var saverInfo = document.getElementById('saver-info');
+      
+      if (document.getElementById('screensaver').style.display !== 'none') {
+         saverClock.innerText = timeStr;
+         // Získání teploty z hlavního widgetu (pokud je načtená)
+         var temp = document.getElementById('weather-temp').innerText;
+         // Datum pro spořič
+         var saverDate = now.getDate() + ". " + (now.getMonth() + 1) + ".";
+         saverInfo.innerText = saverDate + " | " + temp;
+      }
+      
       document.getElementById('date-display').innerText = now.getDate() + ". " + (now.getMonth() + 1) + ". " + now.getFullYear();
       
       var days = ["NEDĚLE", "PONDĚLÍ", "ÚTERÝ", "STŘEDA", "ČTVRTEK", "PÁTEK", "SOBOTA"];
