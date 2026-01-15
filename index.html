@@ -39,7 +39,29 @@
       --status-alert: #FF453A;
     }
 
-    * { box-sizing: border-box; }
+    * { 
+        box-sizing: border-box; 
+        
+        /* DŮLEŽITÉ: Zákaz označování textu a zvýrazňování */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        
+        /* Zákaz modrého "bliknutí" při dotyku na Androidu/iOS */
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+    }
+
+    /* Zákaz přetahování obrázků (ghost image při tažení prstem) */
+    img {
+        -webkit-user-drag: none;
+        -khtml-user-drag: none;
+        -moz-user-drag: none;
+        -o-user-drag: none;
+        user-drag: none;
+        pointer-events: auto; /* Aby stále šlo klikat na Nicka a Judy */
+    }
 
     body { 
         background-color: #2a1b52; 
@@ -56,22 +78,20 @@
         -webkit-flex-direction: column; flex-direction: column;
     }
 
-    /* === SCREENSAVER (Místo Bleska) === */
+    /* === SCREENSAVER === */
     #screensaver {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-color: #000;
-        /* ZDE SE NAČTE VÁŠ OBRÁZEK saver.jpg */
         background-image: url('saver.jpg'); 
         background-size: cover;
         background-position: center;
         z-index: 99999;
-        display: none; /* Skryto */
+        display: none;
         -webkit-align-items: center; align-items: center;
         -webkit-justify-content: center; justify-content: center;
         cursor: pointer;
     }
 
-    /* Kontejner pro obsah spořiče */
     #saver-box {
         text-align: center;
         background: transparent;
@@ -81,14 +101,13 @@
         display: -webkit-flex; display: flex;
         -webkit-flex-direction: column; flex-direction: column;
         -webkit-align-items: center; align-items: center;
-        margin-left: 60px; 
+        margin-left: 15px; 
     }
 
     #saver-clock {
-        font-size: 7rem; /* Velké hodiny */
+        font-size: 7rem;
         font-weight: 900;
         color: #fff;
-        /* Silný stín pro čitelnost na světlém pozadí */
         text-shadow: 0 5px 10px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.5);
         line-height: 0.9;
         font-variant-numeric: tabular-nums;
@@ -96,7 +115,7 @@
     }
     
     #saver-info {
-        font-size: 2rem; /* Datum a počasí */
+        font-size: 2rem;
         font-weight: 800;
         color: #fff;
         text-shadow: 0 3px 6px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.6);
@@ -206,12 +225,12 @@
         object-position: center top; 
         cursor: pointer;
         transition: transform 0.1s, border-color 0.3s;
+        /* Fix pro blikání */
         -webkit-transform: translateZ(0); transform: translateZ(0);
         will-change: box-shadow, transform;
     }
     
     .char-img:active { transform: scale(0.9) translateZ(0); border-color: #fff !important; }
-    
     .playing { animation: pulse-border 2s infinite; }
     
     @keyframes pulse-border {
@@ -265,6 +284,7 @@
 
     #error-console { position: absolute; top: 0; left: 0; width: 100%; background: #900; color: white; font-size: 14px; padding: 15px; display: none; z-index: 9999; }
 
+    /* === MOBILNÍ ZOBRAZENÍ (Portrait) === */
     @media (max-width: 900px) {
         body { padding: 10px; overflow-y: auto; height: auto; display: block; }
         header { -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: flex-start; align-items: flex-start; padding: 10px 15px; margin-bottom: 10px; }
@@ -286,6 +306,7 @@
         .val { font-size: 1.5rem; }
     }
 
+    /* TABLET LANDSCAPE */
     @media (max-width: 900px) and (orientation: landscape) {
         body { overflow: hidden; padding: 10px; height: 100vh; display: -webkit-flex; display: flex; }
         header { display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row; -webkit-justify-content: space-between; justify-content: space-between; -webkit-align-items: center; align-items: center; }
@@ -545,6 +566,7 @@
                 });
             }
             items.sort(function(a, b) { return a.ts - b.ts; });
+            // Limit pro scroll
             items = items.slice(0, 15);
 
             var html = "";
