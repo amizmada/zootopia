@@ -125,6 +125,8 @@
 
     /* HEADER */
     header { 
+        /* OPRAVA: Přidáno position: relative, aby absolutní prvky uvnitř (hodiny) braly ohled na hlavičku */
+        position: relative;
         display: -webkit-flex; display: flex; 
         -webkit-justify-content: space-between; justify-content: space-between; 
         -webkit-align-items: center; align-items: center; 
@@ -289,8 +291,20 @@
         body { padding: 10px; overflow-y: auto; height: auto; display: block; }
         header { -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: flex-start; align-items: flex-start; padding: 10px 15px; margin-bottom: 10px; }
         .header-left { display: block; }
-        h1 { font-size: 1rem; margin: 0; display: inline-block; }
-        .clock { position: absolute; top: 8px; right: 15px; font-size: 1.8rem; margin: 0; line-height: 1; }
+        
+        /* OPRAVA: Přidán padding-right, aby se text nepřekrýval s hodinami */
+        h1 { font-size: 1rem; margin: 0; display: inline-block; padding-right: 90px; }
+
+        /* OPRAVA HODIN: Upravena pozice a velikost */
+        .clock { 
+            position: absolute; 
+            top: 13px; /* Posunuto níže (bylo 8px) - lícování s paddingem */
+            right: 15px; 
+            font-size: 1.5rem; /* Zmenšeno (bylo 1.8rem) */
+            margin: 0; 
+            line-height: 1; 
+        }
+
         .date-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; margin-top: 5px; }
         .date-large { font-size: 1.4rem; margin-right: 15px; }
         .weather-wrap { margin: 0; padding: 0; border: none; height: auto; padding-left: 0; }
@@ -311,7 +325,7 @@
         body { overflow: hidden; padding: 10px; height: 100vh; display: -webkit-flex; display: flex; }
         header { display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row; -webkit-justify-content: space-between; justify-content: space-between; -webkit-align-items: center; align-items: center; }
         .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
-        h1 { display: block; font-size: 1rem; }
+        h1 { display: block; font-size: 1rem; padding-right: 0; }
         .clock { position: relative; top: auto; right: auto; margin: 0; font-size: 2.8rem; }
         .date-row { margin-top: 0; }
         .date-large { font-size: 1.8rem; }
@@ -326,7 +340,6 @@
 </head>
 <body>
 
-  <!-- SCREENSAVER OVERLAY -->
   <div id="screensaver" onclick="hideScreensaver()">
       <div id="saver-box">
           <div id="saver-clock">--:--</div>
@@ -354,12 +367,10 @@
         </div>
       </div>
     </div>
-    <!-- KLIKNUTÍ NA HODINY SPUSTÍ SCREENSAVER -->
     <div id="clock" class="clock" onclick="showScreensaver()">--:--</div>
   </header>
 
   <div class="grid">
-    <!-- PANEL BUS -->
     <div class="panel bus">
       <div class="panel-head">
         <img src="nick.jpg" class="char-img" alt="Nick" onclick="toggleMusic(this, 'nick.mp3', 2.0)">
@@ -374,7 +385,6 @@
       </div>
     </div>
 
-    <!-- PANEL METRO -->
     <div class="panel metro">
       <div class="panel-head">
         <img src="judy.jpg" class="char-img" alt="Judy" onclick="toggleMusic(this, 'judy.mp3', 0.4)">
