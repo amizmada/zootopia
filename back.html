@@ -21,10 +21,10 @@
   <style>
     /* === HOPPERS STYLY === */
     :root {
-      --mabel-color: #f59a5a; 
+      --mabel-color: #D2691E; 
       --mabel-bg: #8B4513; 
-      --george-color: #3affa3; 
-      --george-bg: #1dee8d;
+      --george-color: #00e6e6; 
+      --george-bg: #008080;
       
       --text-main: #FFFFFF;
       --text-sec: #dcdcdc; 
@@ -378,7 +378,7 @@
   <div class="grid">
     <div class="panel bus">
       <div class="panel-head">
-        <img src="bear.jpg" class="char-img" alt="Mabel" onclick="toggleMusic(this, 'mabel.mp3', 2.0)">
+        <img src="mabel.jpg" class="char-img" alt="Mabel" onclick="toggleMusic(this, 'mabel.mp3', 2.0)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:var(--mabel-color)">Příjezdy z Centra</span>
             <div style="font-size:0.8rem; color:#ddd; opacity:0.8">METRO C – SMĚR HÁJE</div>
@@ -392,7 +392,7 @@
 
     <div class="panel metro">
       <div class="panel-head">
-        <img src="lizard.jpg" class="char-img" alt="George" onclick="toggleMusic(this, 'george.mp3', 0.4)">
+        <img src="george.jpg" class="char-img" alt="George" onclick="toggleMusic(this, 'george.mp3', 0.4)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:var(--george-color)">Směr Litochlebské</span>
             <div style="font-size:0.8rem; color:#ddd; opacity:0.8">BUS 177, 181, 182</div>
@@ -496,10 +496,24 @@
         url: API_BASE + "?names=Opatov&limit=40&minutesAfter=90&preferredTimezone=Europe/Prague",
         tbodyId: 'tbody-bus', errElId: 'err-metro',
         filter: function(d) {
+            // Kontrola, jestli je to jedna ze tři linek
             if (!d.route) return false;
             var num = d.route.short_name || d.route.number;
             var isCorrectLine = ["177", "181", "182"].indexOf(num) !== -1;
-            return isCorrectLine && d.trip.headsign !== "Opatov";
+            if (!isCorrectLine) return false;
+
+            // Kontrola směru (POZITIVNÍ FILTR)
+            // Ukaž spoj JEN POKUD cíl obsahuje některé z těchto slov:
+            var dest = d.trip.headsign || "";
+            var goodDestinations = ["Poliklinika Mazurská", "Černý Most", "Kbelský hřbitov"];
+            
+            for (var i = 0; i < goodDestinations.length; i++) {
+                if (dest.indexOf(goodDestinations[i]) !== -1) {
+                    return true;
+                }
+            }
+            
+            return false;
         }
       }
     ];
