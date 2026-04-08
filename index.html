@@ -125,7 +125,6 @@
 
     /* HEADER */
     header { 
-        /* OPRAVA: Přidáno position: relative, aby absolutní prvky uvnitř (hodiny) braly ohled na hlavičku */
         position: relative;
         display: -webkit-flex; display: flex; 
         -webkit-justify-content: space-between; justify-content: space-between; 
@@ -135,21 +134,28 @@
         background: rgba(0,0,0,0.4); 
         border-radius: 16px;
         padding: 15px 25px;
+        padding-right: 320px; /* Rezervováno pro absolutní hodiny na desktopu */
         -webkit-flex: 0 0 auto; flex: 0 0 auto; 
     }
     
-    .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
-    
-    h1 { 
-        margin: 0; font-size: 1.4rem; font-weight: 900; 
-        text-transform: uppercase; letter-spacing: 2px; 
-        background: linear-gradient(90deg, #E07C24, #2DF4FF);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 5px;
-        text-shadow: 0 0 20px rgba(255,255,255,0.1);
+    .header-left { 
+        display: -webkit-flex; display: flex; 
+        -webkit-flex-direction: column; flex-direction: column; 
+        align-items: flex-start;
     }
     
+    .nav-btn-main {
+        align-self: flex-start;
+        background: linear-gradient(135deg, var(--nick-orange), var(--judy-blue));
+        color: #fff; text-decoration: none;
+        padding: 10px 24px; border-radius: 30px; font-size: 1.1rem; font-weight: 900;
+        border: 2px solid rgba(255,255,255,0.4); text-transform: uppercase;
+        letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
+        transition: transform 0.1s, box-shadow 0.1s;
+        display: inline-block; margin-bottom: 8px;
+    }
+    .nav-btn-main:active { transform: scale(0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+
     .date-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
     
     .date-large { 
@@ -171,13 +177,21 @@
     .weather-temp { font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
     .weather-desc { color: #eee; font-size: 1rem; text-transform: lowercase; font-weight: 600; margin-top: 4px; }
     
+    /* Větší, vertikálně centrované hodiny napravo */
     .clock { 
-        font-size: 4rem; font-weight: 900; color: #fff; 
+        position: absolute;
+        right: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 5.5rem; 
+        font-weight: 900; color: #fff; 
         text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-        letter-spacing: -1px;
+        letter-spacing: -2px;
+        white-space: nowrap;
+        margin: 0;
         cursor: pointer; 
     }
-    .clock:active { transform: scale(0.95); opacity: 0.8; }
+    .clock:active { transform: translateY(-50%) scale(0.95); opacity: 0.8; }
 
     /* GRID */
     .grid { 
@@ -289,20 +303,28 @@
     /* === MOBILNÍ ZOBRAZENÍ (Portrait) === */
     @media (max-width: 900px) {
         body { padding: 10px; overflow-y: auto; height: auto; display: block; }
-        header { -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: flex-start; align-items: flex-start; padding: 10px 15px; margin-bottom: 10px; }
-        .header-left { display: block; }
+        header { 
+            -webkit-flex-direction: column; flex-direction: column; 
+            -webkit-align-items: flex-start; align-items: flex-start; 
+            padding: 10px 15px; 
+            padding-right: 140px; /* Brání překrytí s absolutními hodinami vpravo */
+            margin-bottom: 10px; 
+            min-height: 110px;
+            justify-content: center;
+        }
+        .header-left { display: block; width: 100%; text-align: left; }
         
-        /* OPRAVA: Přidán padding-right, aby se text nepřekrýval s hodinami */
-        h1 { font-size: 1rem; margin: 0; display: inline-block; padding-right: 90px; }
+        .nav-btn-main { font-size: 0.9rem; padding: 8px 18px; margin-bottom: 8px; margin-right: 0; display: inline-block; }
 
-        /* OPRAVA HODIN: Upravena pozice a velikost */
+        /* Mobilní hodiny vertikálně vycentrované napravo */
         .clock { 
             position: absolute; 
-            top: 13px; /* Posunuto níže (bylo 8px) - lícování s paddingem */
             right: 15px; 
-            font-size: 1.5rem; /* Zmenšeno (bylo 1.8rem) */
-            margin: 0; 
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2.2rem; 
             line-height: 1; 
+            margin: 0;
         }
 
         .date-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; margin-top: 5px; }
@@ -323,10 +345,26 @@
     /* TABLET LANDSCAPE */
     @media (max-width: 900px) and (orientation: landscape) {
         body { overflow: hidden; padding: 10px; height: 100vh; display: -webkit-flex; display: flex; }
-        header { display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row; -webkit-justify-content: space-between; justify-content: space-between; -webkit-align-items: center; align-items: center; }
-        .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; }
-        h1 { display: block; font-size: 1rem; padding-right: 0; }
-        .clock { position: relative; top: auto; right: auto; margin: 0; font-size: 2.8rem; }
+        header { 
+            display: -webkit-flex; display: flex; 
+            -webkit-flex-direction: row; flex-direction: row; 
+            -webkit-justify-content: space-between; justify-content: space-between; 
+            -webkit-align-items: center; align-items: center; 
+            padding: 15px 25px; 
+            padding-right: 200px;
+        }
+        .header-left { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; width: auto; }
+        .nav-btn-main { margin-bottom: 5px; margin-right: 0; }
+        
+        .clock { 
+            position: absolute; 
+            right: 25px; 
+            top: 50%;
+            transform: translateY(-50%);
+            margin: 0; 
+            font-size: 3.5rem; 
+        }
+        
         .date-row { margin-top: 0; }
         .date-large { font-size: 1.8rem; }
         .weather-wrap { padding-left: 20px; border-left: 2px solid rgba(255,255,255,0.2); }
@@ -353,7 +391,7 @@
 
   <header>
     <div class="header-left">
-      <h1 id="main-title">NAČÍTÁM...</h1>
+      <a href="back.html" class="nav-btn-main">⬅ CESTA DOMŮ</a>
       <div class="date-row">
         <div>
             <div id="date-display" class="date-large">...</div>
@@ -576,7 +614,7 @@
                 });
             }
             items.sort(function(a, b) { return a.ts - b.ts; });
-            // Limit pro scroll
+            
             items = items.slice(0, 15);
 
             var html = "";
@@ -670,19 +708,14 @@
       
       if (document.getElementById('screensaver').style.display !== 'none') {
          saverClock.innerText = timeStr;
-         // Získání teploty z hlavního widgetu (pokud je načtená)
          var temp = document.getElementById('weather-temp').innerText;
-         // Datum pro spořič
          var saverDate = now.getDate() + ". " + (now.getMonth() + 1) + ".";
          saverInfo.innerText = saverDate + " | " + temp;
       }
       
-      document.getElementById('date-display').innerText = now.getDate() + ". " + (now.getMonth() + 1) + ". " + now.getFullYear();
-      
       var days = ["NEDĚLE", "PONDĚLÍ", "ÚTERÝ", "STŘEDA", "ČTVRTEK", "PÁTEK", "SOBOTA"];
       var dayName = days[now.getDay()];
-      var elTitle = document.getElementById('main-title');
-      if(elTitle) elTitle.innerText = dayName;
+      document.getElementById('date-display').innerText = dayName + " " + now.getDate() + ". " + (now.getMonth() + 1) + ".";
 
       var tbodyBus = document.getElementById('tbody-bus');
       if(tbodyBus) updateTimersInDom(tbodyBus);
