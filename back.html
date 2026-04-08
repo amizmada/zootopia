@@ -17,14 +17,33 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hoppers Hub</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#1a2b1f">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta http-equiv="refresh" content="10800">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     /* === HOPPERS STYLY === */
     :root {
-      --mabel-color: #D2691E; 
+      --mabel-color: #f59a5a; 
       --mabel-bg: #8B4513; 
-      --george-color: #00e6e6; 
-      --george-bg: #008080;
+      --george-color: #3affa3; 
+      --george-bg: #1dee8d;
       
       --text-main: #FFFFFF;
       --text-sec: #dcdcdc; 
@@ -378,7 +397,7 @@
   <div class="grid">
     <div class="panel bus">
       <div class="panel-head">
-        <img src="mabel.jpg" class="char-img" alt="Mabel" onclick="toggleMusic(this, 'mabel.mp3', 2.0)">
+        <img src="bear.jpg" class="char-img" alt="Mabel" onclick="toggleMusic(this, 'mabel.mp3', 2.0)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:var(--mabel-color)">Příjezdy z Centra</span>
             <div style="font-size:0.8rem; color:#ddd; opacity:0.8">METRO C – SMĚR HÁJE</div>
@@ -392,7 +411,7 @@
 
     <div class="panel metro">
       <div class="panel-head">
-        <img src="george.jpg" class="char-img" alt="George" onclick="toggleMusic(this, 'george.mp3', 0.4)">
+        <img src="lizard.jpg" class="char-img" alt="George" onclick="toggleMusic(this, 'george.mp3', 0.4)">
         <div style="-webkit-flex:1; flex:1">
             <span class="panel-title" style="color:var(--george-color)">Směr Litochlebské</span>
             <div style="font-size:0.8rem; color:#ddd; opacity:0.8">BUS 177, 181, 182</div>
